@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Daisy UI Custom styling */
+
+/* Current dropdown content window goes off the screen. need to move it left */
+.dropdown .dropdown-content {
+	--tw-translate-x: -190px !important;
+}
+
+/* Remove active styling for navbar items clicked */
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):active) {
+	color: white;
+	background-color: hsl(219 20% 25%);
+}
