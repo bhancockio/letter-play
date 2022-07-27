@@ -1,7 +1,7 @@
 import moment from "moment";
 import axios from "axios";
 
-export const fetchWord = (word: string) => {
+export const fetchWord = () => {
 	const now = moment.utc().format("YYYY-MM-DD");
 	return fetchWordForDate(now);
 };
