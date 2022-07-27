@@ -15,7 +15,7 @@ function App({ Component, pageProps }: AppProps): ReactElement {
 	return (
 		<UserProvider>
 			<Head>
-				<title>Letter Play</title>
+				<title>Letters Play</title>
 			</Head>
 			<Navbar />
 			<SafeComponet {...pageProps} />

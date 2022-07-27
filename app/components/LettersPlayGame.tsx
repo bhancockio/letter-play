@@ -4,7 +4,7 @@ import LettersGrid from "./LettersGrid";
 
 function LettersPlayGame() {
 	return (
-		<div className="flex flex-1">
+		<div className="flex flex-1 flex-col">
 			<LettersGrid />
 			<Keyboard />
 		</div>
