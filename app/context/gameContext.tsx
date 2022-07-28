@@ -9,6 +9,7 @@ export interface IGameState {
 	currentGuess: string[];
 	currentLetterIndex: number;
 	targetWordGuessed: boolean;
+	lettersGuessed: string[];
 }
 
 export type GameContextType = {
@@ -22,11 +23,12 @@ export const GameContext = createContext<GameContextType | null>(null);
 
 const INITIAL_GAME_STATE: IGameState = {
 	targetWord: "",
-	wordGuesses: Array(6).fill(""), // TODO: See if I can remove this and just make it a row of guesses
+	wordGuesses: Array(6).fill(""),
 	currentGuess: Array(5).fill(""),
 	currentGuessCount: 0,
 	currentLetterIndex: 0,
-	targetWordGuessed: false
+	targetWordGuessed: false,
+	lettersGuessed: []
 };
 
 export default function GameContextComponent({ children }) {
@@ -66,7 +68,7 @@ export default function GameContextComponent({ children }) {
 					currentGuessCount: prevGameState.currentGuessCount + 1,
 					wordGuesses: prevGameState.wordGuesses.map((guess, index) => {
 						if (index === prevGameState.currentGuessCount) {
-							return prevGameState.currentGuess.join("");
+							return prevGameState.currentGuess.join("") || "";
 						}
 						return guess;
 					}),
@@ -126,8 +128,13 @@ export default function GameContextComponent({ children }) {
 		}
 	};
 
-	// TODO: This isn't linked to the state at all
+	// TODO: This wasn't linked to the state at before doing ghetto fix with keyboard
+	// TODO: Make sure word is actually an english word.
 	const isValidGuessSubmission = (): boolean => {
+		console.log("isValidGuessSubmission", gameState.currentGuess);
+		if (gameState.currentGuess.includes(" ") || gameState.currentGuess.includes("")) {
+			return false;
+		}
 		return true;
 	};
 
