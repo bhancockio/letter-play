@@ -14,13 +14,15 @@ export interface IGameState {
 export type GameContextType = {
 	gameState: IGameState;
 	setCurrentLetterIndex: (index: number) => void;
+	handleKeyDown: (event: KeyboardEvent) => void;
+	setGameContext: (gameState: IGameState) => void;
 };
 
 export const GameContext = createContext<GameContextType | null>(null);
 
 const INITIAL_GAME_STATE: IGameState = {
 	targetWord: "",
-	wordGuesses: Array(6).fill(Array(5).fill("")), // TODO: See if I can remove this and just make it a row of guesses
+	wordGuesses: Array(6).fill(""), // TODO: See if I can remove this and just make it a row of guesses
 	currentGuess: Array(5).fill(""),
 	currentGuessCount: 0,
 	currentLetterIndex: 0,
@@ -30,6 +32,14 @@ const INITIAL_GAME_STATE: IGameState = {
 export default function GameContextComponent({ children }) {
 	const [gameState, setGameState] = useState<IGameState>(INITIAL_GAME_STATE);
 
+	useEffect(() => {
+		console.log("New game state:", gameState);
+	}, [gameState]);
+
+	const setGameContext = (newGameState: IGameState) => {
+		setGameState({ ...gameState, ...newGameState });
+	};
+
 	const setCurrentLetterIndex = (index: number) => {
 		setGameState({
 			...gameState,
@@ -38,6 +48,7 @@ export default function GameContextComponent({ children }) {
 	};
 
 	const handleKeyDown = (e: KeyboardEvent) => {
+		// console.log("Current game state: ", currentGameState);
 		const newLetter = e.key;
 		console.log("newLetter", newLetter);
 		// handle submission
@@ -50,11 +61,18 @@ export default function GameContextComponent({ children }) {
 				});
 			} else {
 				// Update game state to show that the user guessed incorrectly
-				setGameState({
+				setGameState((prevGameState) => ({
 					...gameState,
-					currentGuessCount: gameState.currentGuessCount + 1,
+					currentGuessCount: prevGameState.currentGuessCount + 1,
+					wordGuesses: prevGameState.wordGuesses.map((guess, index) => {
+						if (index === prevGameState.currentGuessCount) {
+							return prevGameState.currentGuess.join("");
+						}
+						return guess;
+					}),
+					currentLetterIndex: 0,
 					currentGuess: Array(5).fill("") // Reset the current guess
-				});
+				}));
 			}
 		}
 		// Make sure that key is a letter
@@ -108,15 +126,18 @@ export default function GameContextComponent({ children }) {
 		}
 	};
 
+	// TODO: This isn't linked to the state at all
 	const isValidGuessSubmission = (): boolean => {
 		return true;
 	};
 
 	const userGuessedCorrectly = (): boolean => {
-		return true;
+		console.log("Game state", gameState);
+		return gameState.currentGuess.join("") === gameState.targetWord;
 	};
 
 	useEffect(() => {
+		console.log("game context loading");
 		// Fetch target word from API
 		fetchWord()
 			.then((word) => {
@@ -125,17 +146,12 @@ export default function GameContextComponent({ children }) {
 			.catch(() => {
 				setGameState({ ...gameState, targetWord: "" });
 			});
-
-		// Handle key presses
-		document.addEventListener("keydown", handleKeyDown);
-
-		return () => {
-			document.removeEventListener("keydown", handleKeyDown);
-		};
 	}, []);
 
 	return (
-		<GameContext.Provider value={{ gameState, setCurrentLetterIndex }}>
+		<GameContext.Provider
+			value={{ gameState, setCurrentLetterIndex, handleKeyDown, setGameContext }}
+		>
 			{children}
 		</GameContext.Provider>
 	);
