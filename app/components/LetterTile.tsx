@@ -13,15 +13,20 @@ function LetterTile({ letterIndex, letter, guessRowIndex }) {
 		);
 	}, [gameState, guessRowIndex, letterIndex]);
 
-	useEffect(() => {
-		if (isActiveLetter) console.log("Active letter:", letter);
-	}, [isActiveLetter]);
-
 	const handleClick = () => {
 		// Only set the current letter if the user clicks the active word row.
 		if (guessRowIndex === gameState.currentGuessCount) {
 			setCurrentLetterIndex(letterIndex);
 		}
+	};
+
+	const getTileStyle = () => {};
+
+	const getLetter = () => {
+		if (letter) {
+			return letter === " " ? <span>&#8211;</span> : <span>{letter}</span>;
+		}
+		return <span>&nbsp;&nbsp;</span>;
 	};
 
 	return (
@@ -31,7 +36,7 @@ function LetterTile({ letterIndex, letter, guessRowIndex }) {
 				isActiveLetter ? "border-dashed" : "border-solid"
 			}`}
 		>
-			{letter ? letter : <span>&nbsp;&nbsp;</span>}
+			{getLetter()}
 		</div>
 	);
 }

@@ -5,12 +5,14 @@ import LetterTile from "./LetterTile";
 function Word({ guessRowIndex }) {
 	const { gameState } = useGame();
 	const [word, setWord] = useState(Array(5).fill(""));
-	const guess = gameState.wordGuesses[guessRowIndex];
 
 	useEffect(() => {
 		// If current row has already been guessed, show the word.
 		if (guessRowIndex < gameState.currentGuessCount) {
+			const guess = gameState.wordGuesses[guessRowIndex];
 			setWord(guess.split(""));
+		} else if (guessRowIndex === gameState.currentGuessCount) {
+			setWord(gameState.currentGuess);
 		} else {
 			// Otherwise, show the word with blanks.
 			setWord(Array(5).fill(""));
