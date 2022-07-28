@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useGame } from "../context/gameContext";
 import LetterTile from "./LetterTile";
 
-function Word({ guessRowIndex }) {
+interface IWordProps {
+	guessRowIndex: number;
+}
+
+function Word({ guessRowIndex }: IWordProps) {
 	const { gameState } = useGame();
 	const [word, setWord] = useState(Array(5).fill(""));
 
@@ -21,6 +25,7 @@ function Word({ guessRowIndex }) {
 
 	return (
 		<div className="grid grid-cols-5 gap-2 mb-2">
+			{/* eslint-disable react/no-array-index-key */}
 			{word.map((letter, index) => (
 				<LetterTile
 					key={index}

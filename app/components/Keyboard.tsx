@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
-import { IGameState, useGame } from "../context/gameContext";
+import { useGame } from "../context/gameContext";
 
 function Keyboard() {
 	const { gameState, handleKeyDown } = useGame();
 
 	// Not a fan of reassigning event listeners everytime gamestate chnages.
 	useEffect(() => {
-		console.log("Keyboard gamestate", gameState);
 		// Handle key presses
 		document.addEventListener("keydown", handleKeyDown);
 

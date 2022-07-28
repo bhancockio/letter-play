@@ -2,7 +2,13 @@ import React, { useEffect } from "react";
 import { useGame } from "../context/gameContext";
 import { isLetterInCorrectPositionInTargetWord, isLetterInTargetWord } from "../utils/wordUtil";
 
-function LetterTile({ letterIndex, letter, guessRowIndex }) {
+interface ILetterTilerProps {
+	letterIndex: number;
+	letter: string;
+	guessRowIndex: number;
+}
+
+function LetterTile({ letterIndex, letter, guessRowIndex }: ILetterTilerProps) {
 	const { gameState, setCurrentLetterIndex } = useGame();
 	const [isActiveLetter, setIsActiveLetter] = React.useState(false);
 
@@ -35,9 +41,9 @@ function LetterTile({ letterIndex, letter, guessRowIndex }) {
 
 			// Letter is not in the target word
 			return "bg-gray-500 border-gray-500 text-white";
-		} else {
-			return "border-black text-black";
 		}
+		// Letter is currently being guessed or will be guesed in the future
+		return "border-black text-black";
 	};
 
 	const getLetter = () => {
