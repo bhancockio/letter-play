@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { MAXIMUM_LETTERS_IN_WORD } from "../constants";
+import { ALL_ENGLISH_FIVE_LETTERED_WORDS, MAXIMUM_LETTERS_IN_WORD } from "../utils/constants";
 import { fetchWord } from "../utils/wordFetcher";
 
 export interface IGameState {
@@ -132,9 +132,18 @@ export default function GameContextComponent({ children }) {
 	// TODO: Make sure word is actually an english word.
 	const isValidGuessSubmission = (): boolean => {
 		console.log("isValidGuessSubmission", gameState.currentGuess);
+		// Make sure the user's guess doesn't contain empty characters/spaces
 		if (gameState.currentGuess.includes(" ") || gameState.currentGuess.includes("")) {
 			return false;
 		}
+
+		// Make sure the user guesses and english word
+		// TODO: Can I memo this? This is a big check.
+		const userGuess = gameState.currentGuess.join("").toLowerCase();
+		if (!ALL_ENGLISH_FIVE_LETTERED_WORDS.includes(userGuess)) {
+			return false;
+		}
+
 		return true;
 	};
 
