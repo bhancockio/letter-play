@@ -1,6 +1,49 @@
 export const MAXIMUM_LETTERS_IN_WORD = 5;
 export const MAXIMUM_GUESSES = 6;
 
+// QWERTY Keyboard
+export const KEYBOARD_KEYS = [
+	[
+		{ key: "Q", value: "Q" },
+		{ key: "W", value: "W" },
+		{ key: "E", value: "E" },
+		{ key: "R", value: "R" },
+		{ key: "T", value: "T" },
+		{ key: "Y", value: "Y" },
+		{ key: "U", value: "U" },
+		{ key: "I", value: "I" },
+		{ key: "O", value: "O" },
+		{ key: "P", value: "P" }
+	],
+	[
+		{ key: "A", value: "A" },
+		{ key: "S", value: "S" },
+		{ key: "D", value: "D" },
+		{ key: "F", value: "F" },
+		{ key: "G", value: "G" },
+		{ key: "H", value: "H" },
+		{ key: "J", value: "J" },
+		{ key: "K", value: "K" },
+		{ key: "L", value: "L" }
+	],
+	[
+		{ key: "ENTER", value: "ENTER" },
+		{ key: "Z", value: "Z" },
+		{ key: "X", value: "X" },
+		{ key: "C", value: "C" },
+		{ key: "V", value: "V" },
+		{ key: "B", value: "B" },
+		{ key: "N", value: "N" },
+		{ key: "M", value: "M" },
+		{ key: "DELETE", value: "DELETE" }
+	],
+	[
+		{ key: "<", value: "arrowleft" },
+		{ key: "SPACE", value: " " },
+		{ key: ">", value: "arrowright" }
+	]
+];
+
 export const ALL_ENGLISH_FIVE_LETTERED_WORDS = [
 	"there",
 	"their",

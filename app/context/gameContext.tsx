@@ -15,7 +15,7 @@ export interface IGameState {
 export type GameContextType = {
 	gameState: IGameState;
 	setCurrentLetterIndex: (index: number) => void;
-	handleKeyDown: (event: KeyboardEvent) => void;
+	handleKeyDown: (key: string) => void;
 	setGameContext: (gameState: IGameState) => void;
 };
 
@@ -49,12 +49,12 @@ export default function GameContextComponent({ children }) {
 		});
 	};
 
-	const handleKeyDown = (e: KeyboardEvent) => {
+	const handleKeyDown = (newKey: string) => {
+		const formattedKey = newKey.toLowerCase();
 		// console.log("Current game state: ", currentGameState);
-		const newLetter = e.key;
-		console.log("newLetter", newLetter);
+		console.log("formattedKey", formattedKey);
 		// handle submission
-		if (newLetter === "Enter" && isValidGuessSubmission()) {
+		if (formattedKey === "enter" && isValidGuessSubmission()) {
 			if (userGuessedCorrectly()) {
 				// Update game state to show that the user won
 				setGameState({
@@ -78,14 +78,13 @@ export default function GameContextComponent({ children }) {
 			}
 		}
 		// Make sure that key is a letter
-		else if (newLetter.length === 1 && newLetter.match(/[a-z\s]/i)) {
-			console.log("New letter clicked: " + newLetter);
+		else if (formattedKey.length === 1 && formattedKey.match(/[a-z\s]/i)) {
 			// Update game state to show that the user guessed a letter
 			setGameState((prevGameState) => ({
 				...prevGameState,
 				currentGuess: [
 					...prevGameState.currentGuess.slice(0, prevGameState.currentLetterIndex),
-					newLetter.toUpperCase(),
+					formattedKey.toUpperCase(),
 					...prevGameState.currentGuess.slice(prevGameState.currentLetterIndex + 1)
 				],
 				currentLetterIndex: Math.min(
@@ -93,12 +92,12 @@ export default function GameContextComponent({ children }) {
 					MAXIMUM_LETTERS_IN_WORD - 1
 				)
 			}));
-		} else if (newLetter === "ArrowLeft") {
+		} else if (formattedKey === "arrowleft") {
 			setGameState((prevGameState) => ({
 				...prevGameState,
 				currentLetterIndex: Math.max(prevGameState.currentLetterIndex - 1, 0)
 			}));
-		} else if (newLetter === "ArrowRight") {
+		} else if (formattedKey === "arrowright") {
 			setGameState((prevGameState) => ({
 				...prevGameState,
 				currentLetterIndex: Math.min(
@@ -106,10 +105,10 @@ export default function GameContextComponent({ children }) {
 					MAXIMUM_LETTERS_IN_WORD - 1
 				)
 			}));
-		} else if (newLetter === "Backspace") {
+		} else if (formattedKey === "backspace" || formattedKey === "delete") {
 			setGameState((prevGameState) => {
 				const currentLetter = prevGameState.currentGuess[prevGameState.currentLetterIndex];
-				const newLetterIndex =
+				const formattedKeyIndex =
 					currentLetter === ""
 						? Math.max(prevGameState.currentLetterIndex - 1, 0)
 						: prevGameState.currentLetterIndex;
@@ -122,7 +121,7 @@ export default function GameContextComponent({ children }) {
 						"",
 						...prevGameState.currentGuess.slice(prevGameState.currentLetterIndex + 1)
 					],
-					currentLetterIndex: newLetterIndex
+					currentLetterIndex: formattedKeyIndex
 				};
 			});
 		}
