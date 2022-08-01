@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import { useGame } from "../context/gameContext";
 import { KEYBOARD_KEYS } from "../utils/constants";
 
-const KeyboardKey = (props) => {
+interface IKeyboardKeyProps {
+	letter: string;
+	onClick: () => void;
+}
+
+const KeyboardKey = (props: IKeyboardKeyProps) => {
 	const baseKeyStyling =
 		"bg-gray-200 font-bold py-4 mx-1 rounded-md text-center text-black pointer-cursor select-none";
 	let width = "w-[45px]";

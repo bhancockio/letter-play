@@ -10,9 +10,9 @@ interface ILetterTilerProps {
 
 function LetterTile({ letterIndex, letter, guessRowIndex }: ILetterTilerProps) {
 	const { gameState, setCurrentLetterIndex } = useGame();
+	const { submissionStatus } = gameState;
 	const [isActiveLetter, setIsActiveLetter] = React.useState(false);
 
-	// TODO: Talk to avery because this is regnenerating the entire grid everytime the active component is clicked
 	useEffect(() => {
 		setIsActiveLetter(
 			letterIndex === gameState.currentLetterIndex &&
@@ -41,6 +41,8 @@ function LetterTile({ letterIndex, letter, guessRowIndex }: ILetterTilerProps) {
 
 			// Letter is not in the target word
 			return "bg-gray-500 border-gray-500 text-white";
+		} else if (guessRowIndex === gameState.currentGuessCount && submissionStatus === "error") {
+			return "bg-white border-red-500 text-red-500";
 		}
 		// Letter is currently being guessed or will be guesed in the future
 		return "border-black text-black";
