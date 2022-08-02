@@ -28,6 +28,7 @@ const KeyboardKey = (props: IKeyboardKeyProps) => {
 
 function Keyboard() {
 	const { gameState, handleKeyDown } = useGame();
+	const { targetWordGuessed } = gameState;
 
 	// Reassigning event listeners everytime gamestate chnages.
 	// TODO: See if this can be moved somehwere else
@@ -43,8 +44,12 @@ function Keyboard() {
 		};
 	}, [gameState]);
 
+	if (targetWordGuessed) {
+		return null;
+	}
+
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col mt-[-570px] lg:mt-0">
 			{KEYBOARD_KEYS.map((keyboardRow: any[], index: number) => {
 				return (
 					<div key={index} className="flex flex-row justify-center mb-1">

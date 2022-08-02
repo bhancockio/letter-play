@@ -51,40 +51,32 @@ export default function GameContextComponent({ children }) {
 	};
 
 	const handleKeyDown = (newKey: string) => {
+		// Ignore keys if user has already won
+		if (gameState.targetWordGuessed) return;
+
 		// Convert keyboard inputs to lowercase for simplicity and consistency
 		const formattedKey = newKey.toLowerCase();
-
 		// handle submission
 		const { validSubmission, message } = isValidGuessSubmission();
 
 		if (formattedKey === "enter") {
 			if (validSubmission) {
 				// Show message
-				if (userGuessedCorrectly()) {
-					// Update game state to show that the user won
-					setGameState((prevGameState) => ({
-						...prevGameState,
-						targetWordGuessed: true,
-						submissionStatus: "normal",
-						message: message
-					}));
-				} else {
-					// Update game state to show that the user guessed incorrectly
-					setGameState((prevGameState) => ({
-						...prevGameState,
-						currentGuessCount: prevGameState.currentGuessCount + 1,
-						wordGuesses: prevGameState.wordGuesses.map((guess, index) => {
-							if (index === prevGameState.currentGuessCount) {
-								return prevGameState.currentGuess.join("") || "";
-							}
-							return guess;
-						}),
-						currentLetterIndex: 0,
-						currentGuess: Array(5).fill(""), // Reset the current guess
-						submissionStatus: "normal",
-						message: message
-					}));
-				}
+				setGameState((prevGameState) => ({
+					...prevGameState,
+					currentGuessCount: prevGameState.currentGuessCount + 1,
+					wordGuesses: prevGameState.wordGuesses.map((guess, index) => {
+						if (index === prevGameState.currentGuessCount) {
+							return prevGameState.currentGuess.join("") || "";
+						}
+						return guess;
+					}),
+					currentLetterIndex: 0,
+					currentGuess: Array(5).fill(""), // Reset the current guess
+					submissionStatus: "normal",
+					targetWordGuessed: userGuessedCorrectly(),
+					message: message
+				}));
 			} else {
 				// Show message
 				setGameState((prevGameState) => ({
@@ -175,7 +167,7 @@ export default function GameContextComponent({ children }) {
 	};
 
 	const userGuessedCorrectly = (): boolean => {
-		return gameState.currentGuess.join("") === gameState.targetWord;
+		return gameState.currentGuess.join("").toLowerCase() === gameState.targetWord.toLowerCase();
 	};
 
 	useEffect(() => {
