@@ -7,7 +7,7 @@ function GameInformation() {
 
 	return (
 		<div
-			className={`flex-1 min-w-[341px] ${
+			className={`w-[341px] mx-auto ${
 				targetWordGuessed ? "mt-4" : "mt-[280px]"
 			} lg:mt-12 lg:mr-auto`}
 		>

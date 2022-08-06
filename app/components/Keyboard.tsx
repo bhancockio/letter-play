@@ -9,7 +9,7 @@ interface IKeyboardKeyProps {
 
 const KeyboardKey = (props: IKeyboardKeyProps) => {
 	const baseKeyStyling =
-		"bg-gray-200 font-bold py-4 mx-1 rounded-md text-center text-black pointer-cursor select-none";
+		"bg-gray-200 font-bold py-4 mx-[2px] rounded-md text-center text-black pointer-cursor select-none";
 	let width = "w-[45px]";
 
 	// Handle special characters
@@ -49,7 +49,7 @@ function Keyboard() {
 	}
 
 	return (
-		<div className="flex flex-col mt-[-570px] lg:mt-0">
+		<div className="flex flex-col mx-2 mt-[-570px] lg:mt-0">
 			{KEYBOARD_KEYS.map((keyboardRow: any[], index: number) => {
 				return (
 					<div key={index} className="flex flex-row justify-center mb-1">
