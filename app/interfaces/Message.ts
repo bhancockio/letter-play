@@ -1,4 +1,4 @@
-export default class Message {
+export default interface Message {
 	show: boolean;
 	text?: string;
 }

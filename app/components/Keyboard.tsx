@@ -1,16 +1,20 @@
 import React, { useEffect } from "react";
 import { useGame } from "../context/gameContext";
+import LetterGuess from "../interfaces/LetterGuess";
 import { KEYBOARD_KEYS } from "../utils/constants";
 
 interface IKeyboardKeyProps {
 	letter: string;
 	onClick: () => void;
+	lettersGuessed: Map<string, LetterGuess>;
 }
 
-const KeyboardKey = ({ letter, onClick }: IKeyboardKeyProps) => {
+const KeyboardKey = ({ letter, onClick, lettersGuessed }: IKeyboardKeyProps) => {
 	const baseKeyStyling =
-		"bg-gray-200 font-bold py-4 mx-[2px] rounded-md text-center text-black pointer-cursor select-none";
+		"font-bold py-4 mx-[2px] rounded-md text-center pointer-cursor select-none";
 	let width = "w-[45px]";
+	let backgroundColor = "bg-gray-200";
+	let textColor = "text-black";
 
 	// Handle special characters
 	if (letter === "SPACE") {
@@ -19,8 +23,24 @@ const KeyboardKey = ({ letter, onClick }: IKeyboardKeyProps) => {
 		width = "w-[95px]";
 	}
 
+	// Handle letters that have been guessed
+	const lettterGuessed = lettersGuessed.get(letter);
+	if (lettterGuessed) {
+		textColor = "text-white";
+		if (lettterGuessed.inCorrectSpot) {
+			backgroundColor = "bg-green-500";
+		} else if (lettterGuessed.inWord) {
+			backgroundColor = "bg-orange-400";
+		} else {
+			backgroundColor = "bg-gray-500";
+		}
+	}
+
 	return (
-		<div className={`${baseKeyStyling} ${width}`} onClick={onClick}>
+		<div
+			className={`${baseKeyStyling} ${width} ${backgroundColor} ${textColor}`}
+			onClick={onClick}
+		>
 			{letter}
 		</div>
 	);
@@ -28,7 +48,7 @@ const KeyboardKey = ({ letter, onClick }: IKeyboardKeyProps) => {
 
 function Keyboard() {
 	const { gameState, handleKeyDown } = useGame();
-	const { targetWordGuessed } = gameState;
+	const { targetWordGuessed, lettersGuessed } = gameState;
 
 	// Reassigning event listeners everytime gamestate chnages.
 	// TODO: See if this can be moved somehwere else
@@ -54,6 +74,7 @@ function Keyboard() {
 				<div key={index} className="flex flex-row justify-center mb-1">
 					{keyboardRow.map((keyValuePair) => (
 						<KeyboardKey
+							lettersGuessed={lettersGuessed}
 							key={keyValuePair.key}
 							letter={keyValuePair.key}
 							onClick={() => handleKeyDown(keyValuePair.value)}

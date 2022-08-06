@@ -7,6 +7,5 @@ export const isLetterInCorrectPositionInTargetWord = (
 };
 
 export const isLetterInTargetWord = (letter: string, targetWord: string) => {
-	console.log(`isLetterInTargetWord: ${letter} ${targetWord}`);
 	return targetWord.toLowerCase().indexOf(letter.toLowerCase()) !== -1;
 };

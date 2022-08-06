@@ -44,22 +44,22 @@ function GameInformation() {
 							to save your stats/streaks.
 						</p>
 					</div>
-					<div>
+					<div className="flex flex-row justify-abround">
 						<button
 							type="button"
-							className="bg-green-500 p-2 tracking-tight mr-1 rounded-md text-white font-semibold"
+							className="bg-green-500 py-2 px-3 tracking-tight mr-1 rounded-md text-white font-semibold"
 						>
 							New Game
 						</button>
 						<button
 							type="button"
-							className="bg-purple-500 p-2 tracking-tight mr-1 rounded-md text-white font-semibold"
+							className="bg-purple-500 py-2 px-3 tracking-tight mr-1 rounded-md text-white font-semibold"
 						>
 							Save
 						</button>
 						<button
 							type="button"
-							className="bg-purple-500 p-2 tracking-tight rounded-md text-white font-semibold"
+							className="bg-purple-500 py-2 px-3 tracking-tight rounded-md text-white font-semibold"
 						>
 							Challenge A Friend
 						</button>

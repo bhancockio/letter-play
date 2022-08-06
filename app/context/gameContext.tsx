@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { ALL_ENGLISH_FIVE_LETTERED_WORDS, MAXIMUM_LETTERS_IN_WORD } from "../utils/constants";
 import { fetchWord } from "../utils/wordFetcher";
 import Message from "../interfaces/Message";
+import LetterGuess from "../interfaces/LetterGuess";
 
 export interface IGameState {
 	targetWord: string;
@@ -10,9 +11,9 @@ export interface IGameState {
 	currentGuess: string[];
 	currentLetterIndex: number;
 	targetWordGuessed: boolean;
-	lettersGuessed: string[];
 	message: Message;
 	submissionStatus: "normal" | "error";
+	lettersGuessed: Map<string, LetterGuess>;
 }
 
 export type GameContextType = {
@@ -31,9 +32,9 @@ const INITIAL_GAME_STATE: IGameState = {
 	currentGuessCount: 0,
 	currentLetterIndex: 0,
 	targetWordGuessed: false,
-	lettersGuessed: [],
 	message: { show: false },
-	submissionStatus: "normal"
+	submissionStatus: "normal",
+	lettersGuessed: new Map<string, LetterGuess>()
 };
 
 export default function GameContextComponent({ children }) {
@@ -53,6 +54,7 @@ export default function GameContextComponent({ children }) {
 	const handleKeyDown = (newKey: string) => {
 		// Ignore keys if user has already won
 		if (gameState.targetWordGuessed) return;
+		console.log(gameState);
 
 		// Convert keyboard inputs to lowercase for simplicity and consistency
 		const formattedKey = newKey.toLowerCase();
@@ -61,7 +63,9 @@ export default function GameContextComponent({ children }) {
 
 		if (formattedKey === "enter") {
 			if (validSubmission) {
-				// Show message
+				// Update keyboard
+				updateKeyboardBasedOnGuess();
+
 				setGameState((prevGameState) => ({
 					...prevGameState,
 					currentGuessCount: prevGameState.currentGuessCount + 1,
@@ -168,6 +172,42 @@ export default function GameContextComponent({ children }) {
 
 	const userGuessedCorrectly = (): boolean => {
 		return gameState.currentGuess.join("").toLowerCase() === gameState.targetWord.toLowerCase();
+	};
+
+	const updateKeyboardBasedOnGuess = () => {
+		gameState.currentGuess.forEach((letter, index) => {
+			// If the letter was already guessed properly, don't change the keyboard
+			const letterGuess = gameState.lettersGuessed.get(letter);
+			if (letterGuess && letterGuess.inCorrectSpot) {
+				return;
+			}
+
+			// Update the letter if it's in the word
+			else if (gameState.targetWord.toUpperCase().includes(letter)) {
+				// check to see if the letter is in the correct spot or not
+				const inCorrectSpot = gameState.targetWord.toUpperCase().indexOf(letter) === index;
+				setGameState((prevGameState) => ({
+					...prevGameState,
+					lettersGuessed: new Map(
+						prevGameState.lettersGuessed.set(letter, {
+							inWord: true,
+							inCorrectSpot: inCorrectSpot
+						})
+					)
+				}));
+			} else {
+				// Update the letter if it's not in the word
+				setGameState((prevGameState) => ({
+					...prevGameState,
+					lettersGuessed: new Map(
+						prevGameState.lettersGuessed.set(letter, {
+							inWord: false,
+							inCorrectSpot: false
+						})
+					)
+				}));
+			}
+		});
 	};
 
 	useEffect(() => {
