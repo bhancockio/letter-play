@@ -9,9 +9,8 @@ function Notifications() {
 		if (submissionStatus === "error") {
 			console.log("here");
 			return "bg-red-200 text-red-500";
-		} else {
-			return "bg-white text-black";
 		}
+		return "bg-white text-black";
 	};
 
 	return (

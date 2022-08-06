@@ -38,10 +38,11 @@ function LetterTile({ letterIndex, letter, guessRowIndex }: ILetterTilerProps) {
 			if (isLetterInTargetWord(letter, gameState.targetWord)) {
 				return "bg-orange-400 border-orange-400 text-white";
 			}
-
 			// Letter is not in the target word
 			return "bg-gray-500 border-gray-500 text-white";
-		} else if (guessRowIndex === gameState.currentGuessCount && submissionStatus === "error") {
+		}
+
+		if (guessRowIndex === gameState.currentGuessCount && submissionStatus === "error") {
 			return "bg-white border-red-500 text-red-500";
 		}
 		// Letter is currently being guessed or will be guesed in the future

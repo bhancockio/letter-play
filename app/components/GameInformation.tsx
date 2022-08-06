@@ -18,8 +18,8 @@ function GameInformation() {
 						Welcome to LettersPlay!
 					</h2>
 					<p className="text-slate-700">
-						It's for people that love Wordle, but hate limits. Enjoy unlimited games,
-						challenge others and learn about words.
+						It&apos;s for people that love Wordle, but hate limits. Enjoy unlimited
+						games, challenge others and learn about words.
 					</p>
 				</div>
 				<div className="mb-2">
@@ -38,20 +38,29 @@ function GameInformation() {
 					<div className="bg-green-200 py-2 px-4 rounded-md my-5">
 						<p className="text-green-700 font-semibold">
 							You guessed {targetWord.toUpperCase()}. Great job! You should{" "}
-							<a href="#" className="underline">
+							<a href="/" className="underline">
 								create a free account
 							</a>{" "}
 							to save your stats/streaks.
 						</p>
 					</div>
 					<div>
-						<button className="bg-green-500 p-2 tracking-tight mr-1 rounded-md text-white font-semibold">
+						<button
+							type="button"
+							className="bg-green-500 p-2 tracking-tight mr-1 rounded-md text-white font-semibold"
+						>
 							New Game
 						</button>
-						<button className="bg-purple-500 p-2 tracking-tight mr-1 rounded-md text-white font-semibold">
+						<button
+							type="button"
+							className="bg-purple-500 p-2 tracking-tight mr-1 rounded-md text-white font-semibold"
+						>
 							Save
 						</button>
-						<button className="bg-purple-500 p-2 tracking-tight rounded-md text-white font-semibold">
+						<button
+							type="button"
+							className="bg-purple-500 p-2 tracking-tight rounded-md text-white font-semibold"
+						>
 							Challenge A Friend
 						</button>
 					</div>

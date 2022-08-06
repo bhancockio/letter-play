@@ -7,21 +7,21 @@ interface IKeyboardKeyProps {
 	onClick: () => void;
 }
 
-const KeyboardKey = (props: IKeyboardKeyProps) => {
+const KeyboardKey = ({ letter, onClick }: IKeyboardKeyProps) => {
 	const baseKeyStyling =
 		"bg-gray-200 font-bold py-4 mx-[2px] rounded-md text-center text-black pointer-cursor select-none";
 	let width = "w-[45px]";
 
 	// Handle special characters
-	if (props.letter === "SPACE") {
+	if (letter === "SPACE") {
 		width = "w-[345px]";
-	} else if (props.letter === "ENTER" || props.letter === "DELETE") {
+	} else if (letter === "ENTER" || letter === "DELETE") {
 		width = "w-[95px]";
 	}
 
 	return (
-		<div className={`${baseKeyStyling} ${width}`} onClick={props.onClick}>
-			{props.letter}
+		<div className={`${baseKeyStyling} ${width}`} onClick={onClick}>
+			{letter}
 		</div>
 	);
 };
@@ -50,19 +50,17 @@ function Keyboard() {
 
 	return (
 		<div className="flex flex-col mx-2 mt-[-570px] lg:mt-0">
-			{KEYBOARD_KEYS.map((keyboardRow: any[], index: number) => {
-				return (
-					<div key={index} className="flex flex-row justify-center mb-1">
-						{keyboardRow.map((keyValuePair) => (
-							<KeyboardKey
-								key={keyValuePair.key}
-								letter={keyValuePair.key}
-								onClick={() => handleKeyDown(keyValuePair.value)}
-							/>
-						))}
-					</div>
-				);
-			})}
+			{KEYBOARD_KEYS.map((keyboardRow: any[], index: number) => (
+				<div key={index} className="flex flex-row justify-center mb-1">
+					{keyboardRow.map((keyValuePair) => (
+						<KeyboardKey
+							key={keyValuePair.key}
+							letter={keyValuePair.key}
+							onClick={() => handleKeyDown(keyValuePair.value)}
+						/>
+					))}
+				</div>
+			))}
 		</div>
 	);
 }
