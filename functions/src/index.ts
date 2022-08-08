@@ -16,6 +16,11 @@ admin.initializeApp();
 
 /* ----------- HTTP FUNCTIONS ----------- */
 const userRoutes = require("./routes/userRoutes");
+const wordRoutes = require("./routes/wordRoutes");
+// const statRoutes = require("./routes/statRoutes");
+
 app.use("/api", userRoutes.routes);
+app.use("/api", wordRoutes.routes);
+// app.use("/api", userRoutes.routes);
 
 exports.app = functions.https.onRequest(app);
