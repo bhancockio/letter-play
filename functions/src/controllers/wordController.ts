@@ -3,9 +3,11 @@ import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import { ALL_ENGLISH_FIVE_LETTERED_WORDS } from "../utils/words";
 import { generateFirestoreUUID } from "../utils/database";
+import { Word } from "../types/Word";
 const GCLOUD_API_KEY = functions.config().gcloud.api_key;
+const moment = require("moment");
 
-const generateNewWordForDay = (req: Request, res: Response) => {
+const generateNewWordForDay = async (req: Request, res: Response) => {
 	functions.logger.log("Generating new word for day");
 
 	if (req.body.API_KEY !== GCLOUD_API_KEY) {
@@ -13,33 +15,44 @@ const generateNewWordForDay = (req: Request, res: Response) => {
 	}
 
 	// Collect all words that have already been used
-	return admin
+	const currentDate = moment().format("YYYY-MM-DD");
+	const existingWordsOfTheDay: Word[] = await admin
 		.firestore()
 		.collection("words")
 		.get()
-		.then((snapshot) => {
+		.then((snapshot): Word[] => {
 			// Collect all words that have already been used in the app
-			const words: string[] = [];
+			const words: Word[] = [];
+			if (snapshot.empty) return [];
 			snapshot.forEach((doc) => {
-				words.push(doc.data().word);
-			}),
-				functions.logger.log("Got words", words);
+				words.push(doc.data() as Word);
+			});
 			return words;
 		})
-		.then((existingWords: string[]) => {
-			// Pick a new word for the day.
-			const newWord = pickNewWordOfTheDay(existingWords);
-			functions.logger.log("New word", newWord);
-			return newWord;
-		})
-		.then((newWord: string) => {
-			// Add the new word to the database
-			const id = generateFirestoreUUID();
-			return admin
-				.firestore()
-				.doc(`words/${id}`)
-				.set({ word: newWord, created: new Date().toISOString(), id: id });
-		})
+		.catch((error): Word[] => {
+			functions.logger.error("Error collecting words of the day");
+			functions.logger.error(error);
+			return [] as Word[];
+		});
+
+	// Check to make sure that a word wasn't already picked for the day
+	for (let i = 0; i < existingWordsOfTheDay.length; i++) {
+		const wordOfTheDay = existingWordsOfTheDay[i];
+		if (wordOfTheDay.date === currentDate) {
+			return res.status(400).json({ message: "Word already added for today" });
+		}
+	}
+
+	// Pick a new word for the day.
+	const newWord = pickNewWordOfTheDay(existingWordsOfTheDay);
+	functions.logger.log("New word", newWord);
+
+	// Add the new word to the database
+	const id = generateFirestoreUUID();
+	return admin
+		.firestore()
+		.doc(`words/${id}`)
+		.set({ word: newWord, date: moment().format("YYYY-MM-DD"), id: id })
 		.then(() => {
 			functions.logger.log("New word added to database");
 			return res.status(204).json({ message: "New word added to database" });
@@ -51,14 +64,16 @@ const generateNewWordForDay = (req: Request, res: Response) => {
 		});
 };
 
-const pickNewWordOfTheDay = (usedWord: string[]): string => {
+const pickNewWordOfTheDay = (previousWordsOfTheDay: Word[]): string => {
 	let newWord;
+	const previousWords = previousWordsOfTheDay.map((wordOfTheDay: Word) => wordOfTheDay.word);
+	// Make sure that we don't pick a previously used word.
 	while (!newWord) {
 		newWord =
 			ALL_ENGLISH_FIVE_LETTERED_WORDS[
 				Math.floor(Math.random() * ALL_ENGLISH_FIVE_LETTERED_WORDS.length)
 			];
-		if (usedWord.includes(newWord)) {
+		if (previousWords.includes(newWord)) {
 			newWord = null;
 		}
 	}

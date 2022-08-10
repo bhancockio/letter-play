@@ -1,0 +1,25 @@
+[debug] [2022-08-10T22:12:48.294Z] ----------------------------------------------------------------------
+[debug] [2022-08-10T22:12:48.296Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\theha\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions:app
+[debug] [2022-08-10T22:12:48.297Z] CLI Version:   11.5.0
+[debug] [2022-08-10T22:12:48.297Z] Platform:      win32
+[debug] [2022-08-10T22:12:48.297Z] Node Version:  v16.13.1
+[debug] [2022-08-10T22:12:48.298Z] Time:          Wed Aug 10 2022 18:12:48 GMT-0400 (Eastern Daylight Time)
+[debug] [2022-08-10T22:12:48.299Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-08-10T22:12:48.378Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-08-10T22:12:48.378Z] > authorizing via signed-in user (brandon9598@gmail.com)
+[debug] [2022-08-10T22:12:48.379Z] [iam] checking project letters-play for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2022-08-10T22:12:48.381Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/letters-play:testIamPermissions [none]
+[debug] [2022-08-10T22:12:48.382Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/letters-play:testIamPermissions x-goog-quota-user=projects/letters-play
+[debug] [2022-08-10T22:12:48.382Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/letters-play:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2022-08-10T22:12:48.597Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/letters-play:testIamPermissions 200
+[debug] [2022-08-10T22:12:48.597Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/letters-play:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2022-08-10T22:12:48.597Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/letters-play/serviceAccounts/letters-play@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2022-08-10T22:12:48.597Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/letters-play/serviceAccounts/letters-play@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2022-08-10T22:12:49.042Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/letters-play/serviceAccounts/letters-play@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2022-08-10T22:12:49.042Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/letters-play/serviceAccounts/letters-play@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'letters-play'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
