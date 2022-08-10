@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import { ALL_ENGLISH_FIVE_LETTERED_WORDS } from "../utils/words";
-import { generateFirestoreUUID } from "../utils/database";
 import { Word } from "../types/Word";
 const GCLOUD_API_KEY = functions.config().gcloud.api_key;
 const moment = require("moment");
@@ -48,11 +47,10 @@ const generateNewWordForDay = async (req: Request, res: Response) => {
 	functions.logger.log("New word", newWord);
 
 	// Add the new word to the database
-	const id = generateFirestoreUUID();
 	return admin
 		.firestore()
-		.doc(`words/${id}`)
-		.set({ word: newWord, date: moment().format("YYYY-MM-DD"), id: id })
+		.doc(`words/${newWord}`)
+		.set({ word: newWord, date: moment().format("YYYY-MM-DD") })
 		.then(() => {
 			functions.logger.log("New word added to database");
 			return res.status(204).json({ message: "New word added to database" });
@@ -80,6 +78,74 @@ const pickNewWordOfTheDay = (previousWordsOfTheDay: Word[]): string => {
 	return newWord;
 };
 
+const getWord = (req: Request, res: Response) => {
+	// By default, fetch the word of the day unless the user requests a random word.
+	const random = !!req.query.random;
+
+	const wordPromise = random ? getRandomWord() : getWordOfTheDay();
+	return wordPromise
+		.then((word) => {
+			return res
+				.status(200)
+				.json({ message: "Successfully fetched word", data: { word: word } });
+		})
+		.catch((error) => {
+			functions.logger.error("Error fetching word");
+			functions.logger.error(error);
+			return res.status(500).json({ message: "Something went wrong fetching the word" });
+		});
+};
+
+const getRandomWord = async (): Promise<string> => {
+	const randomWord =
+		ALL_ENGLISH_FIVE_LETTERED_WORDS[
+			Math.floor(Math.random() * ALL_ENGLISH_FIVE_LETTERED_WORDS.length)
+		];
+
+	return admin
+		.firestore()
+		.doc(`words/${randomWord}`)
+		.get()
+		.then((snapshot) => {
+			// Write the word to the database if it doesn't already exist.
+			// This will be used for stats tracking purposes later.
+			if (!snapshot.exists) {
+				return admin.firestore().doc(`words/${randomWord}`).set({ word: randomWord });
+			}
+			return;
+		})
+		.then(() => {
+			return Promise.resolve(randomWord);
+		})
+		.catch((error: Error) => {
+			functions.logger.error("Error getting random word");
+			functions.logger.error(error);
+			return Promise.reject(new Error("Error getting random word"));
+		});
+};
+
+const getWordOfTheDay = async (): Promise<string> => {
+	return admin
+		.firestore()
+		.collection("words")
+		.where("date", ">", "")
+		.orderBy("date", "desc")
+		.limit(1)
+		.get()
+		.then((snapshot) => {
+			if (snapshot.empty) {
+				functions.logger.error("Something went wrong fetching the word of the day");
+			}
+			return snapshot.docs[0].data().word;
+		})
+		.catch((error) => {
+			functions.logger.error("Error getting word of the day");
+			functions.logger.error(error);
+			return Promise.reject(new Error("Error getting word of the day"));
+		});
+};
+
 module.exports = {
-	generateNewWordForDay
+	generateNewWordForDay,
+	getWord
 };
