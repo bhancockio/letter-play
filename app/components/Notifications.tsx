@@ -7,19 +7,16 @@ function Notifications() {
 
 	const getStylesForMessageType = () => {
 		if (submissionStatus === "error") {
-			console.log("here");
 			return "bg-red-200 text-red-500";
 		}
 		return "bg-white text-black";
 	};
 
 	return (
-		<div className="h-12">
-			<div
-				className={`py-1 text-center font-semibold text-lg rounded ${getStylesForMessageType()}`}
-			>
-				{message?.show ? message.text : ""}
-			</div>
+		<div
+			className={`py-1 text-center font-semibold text-lg rounded min-h-[36px] ${getStylesForMessageType()}`}
+		>
+			{message?.show ? message.text : ""}
 		</div>
 	);
 }

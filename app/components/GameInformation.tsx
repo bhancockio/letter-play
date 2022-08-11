@@ -32,7 +32,7 @@ function GameInformation() {
 	return (
 		<div
 			className={`w-[341px] mx-auto ${
-				targetWordGuessed ? "mt-4" : "mt-[280px]"
+				targetWordGuessed || outOfGuesses ? "mt-4" : "mt-[280px]"
 			} lg:mt-12 lg:mr-auto`}
 		>
 			{/* Card about the game */}

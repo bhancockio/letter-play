@@ -59,9 +59,20 @@ function LetterTile({ letterIndex, letter, guessRowIndex }: ILetterTilerProps) {
 	return (
 		<div
 			onClick={handleClick}
-			className={`w-full py-2 rounded-md text-center border-4 text-3xl font-bold cursor-pointer ${
-				isActiveLetter ? "border-dashed" : "border-solid"
-			} ${getTileStyle()}`}
+			className={`
+			w-full 
+			font-bold 
+			rounded-md 
+			text-center 
+			cursor-pointer
+			py-1 
+			border-2 
+			min-w-[50px]
+			sm:min-w-[55px]
+			sm:py-2 
+			smborder-4 
+			text-3xl 
+			 ${isActiveLetter ? "border-dashed" : "border-solid"} ${getTileStyle()}`}
 		>
 			{getLetter()}
 		</div>

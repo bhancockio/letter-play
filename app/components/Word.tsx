@@ -24,7 +24,7 @@ function Word({ guessRowIndex }: IWordProps) {
 	}, [gameState]);
 
 	return (
-		<div className="grid grid-cols-5 gap-2 mb-2">
+		<div className="grid grid-cols-5 gap-1 mx-auto sm:max-w-max sm:gap-2 mb-1 sm:mb-2">
 			{/* eslint-disable react/no-array-index-key */}
 			{word.map((letter, index) => (
 				<LetterTile

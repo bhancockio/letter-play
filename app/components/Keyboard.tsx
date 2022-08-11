@@ -11,7 +11,7 @@ interface IKeyboardKeyProps {
 
 const KeyboardKey = ({ letter, onClick, lettersGuessed }: IKeyboardKeyProps) => {
 	const baseKeyStyling =
-		"font-bold py-4 mx-[2px] rounded-md text-center pointer-cursor select-none";
+		"font-bold py-3 sm:py-4 mx-[2px] rounded-md text-center pointer-cursor select-none";
 	let width = "w-[45px]";
 	let backgroundColor = "bg-gray-200";
 	let textColor = "text-black";
@@ -48,7 +48,7 @@ const KeyboardKey = ({ letter, onClick, lettersGuessed }: IKeyboardKeyProps) => 
 
 function Keyboard() {
 	const { gameState, handleKeyDown } = useGame();
-	const { targetWordGuessed, lettersGuessed } = gameState;
+	const { targetWordGuessed, lettersGuessed, outOfGuesses } = gameState;
 
 	// Reassigning event listeners everytime gamestate chnages.
 	// TODO: See if this can be moved somehwere else
@@ -64,7 +64,7 @@ function Keyboard() {
 		};
 	}, [gameState]);
 
-	if (targetWordGuessed) {
+	if (targetWordGuessed || outOfGuesses) {
 		return null;
 	}
 
