@@ -1,4 +1,3 @@
-import Link from "next/link";
 import React from "react";
 import { useGame } from "../context/gameContext";
 
@@ -22,8 +21,8 @@ function GameInformation() {
 					</p>
 				) : (
 					<p>
-						The correct word was {targetWord.toUpperCase()}. Don't worry. Click New Game
-						below to start another game.
+						The correct word was {targetWord.toUpperCase()}. Don&apos;t worry. Click New
+						Game below to start another game.
 					</p>
 				)}
 			</div>
