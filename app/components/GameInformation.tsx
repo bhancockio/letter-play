@@ -3,7 +3,7 @@ import { useGame } from "../context/gameContext";
 
 function GameInformation() {
 	const { gameState } = useGame();
-	const { targetWord, targetWordGuessed, outOfGuesses } = gameState;
+	const { targetWord, targetWordGuessed, outOfGuesses, puzzleNumber } = gameState;
 
 	const endOfGamePrompt = () => {
 		const bgColor = targetWordGuessed ? "bg-green-200" : "bg-red-200";
@@ -46,14 +46,15 @@ function GameInformation() {
 						games, challenge others and learn about words.
 					</p>
 				</div>
-				<div className="mb-2">
-					<h2 className="text-lg font-semibold text-slate-800">Daily Puzze #213</h2>
-					<p className="text-slate-700 mb-1">Mon, Aug 01</p>
-					<p className="text-slate-700 mb-1">
-						A new word is selected every day at midnight Easter Time
-					</p>
-					<p className="text-slate-700 mb-1">Game ID: 362850426 </p>
-				</div>
+				{puzzleNumber && (
+					<div className="mb-2">
+						<h2 className="text-lg font-semibold text-slate-800">Daily Puzze #213</h2>
+						<p className="text-slate-700 mb-1">Mon, Aug 01</p>
+						<p className="text-slate-700 mb-1">
+							A new word is selected every day at midnight UTC
+						</p>
+					</div>
+				)}
 			</div>
 
 			{/* Winner  (prompt to create a new acount) */}
