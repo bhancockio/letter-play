@@ -88,9 +88,7 @@ const getWord = (req: Request, res: Response) => {
 	const wordPromise = random ? getRandomWord() : getWordOfTheDay();
 	return wordPromise
 		.then((word) => {
-			return res
-				.status(200)
-				.json({ message: "Successfully fetched word", data: { word: word } });
+			return res.status(200).json({ message: "Successfully fetched word", data: word });
 		})
 		.catch((error) => {
 			functions.logger.error("Error fetching word");
@@ -99,7 +97,7 @@ const getWord = (req: Request, res: Response) => {
 		});
 };
 
-const getRandomWord = async (): Promise<string> => {
+const getRandomWord = async (): Promise<Word> => {
 	const randomWord =
 		ALL_ENGLISH_FIVE_LETTERED_WORDS[
 			Math.floor(Math.random() * ALL_ENGLISH_FIVE_LETTERED_WORDS.length)
@@ -118,7 +116,7 @@ const getRandomWord = async (): Promise<string> => {
 			return;
 		})
 		.then(() => {
-			return Promise.resolve(randomWord);
+			return Promise.resolve({ word: randomWord });
 		})
 		.catch((error: Error) => {
 			functions.logger.error("Error getting random word");
@@ -127,7 +125,7 @@ const getRandomWord = async (): Promise<string> => {
 		});
 };
 
-const getWordOfTheDay = async (): Promise<string> => {
+const getWordOfTheDay = async (): Promise<Word> => {
 	return admin
 		.firestore()
 		.collection("words")
@@ -139,7 +137,7 @@ const getWordOfTheDay = async (): Promise<string> => {
 			if (snapshot.empty) {
 				functions.logger.error("Something went wrong fetching the word of the day");
 			}
-			return snapshot.docs[0].data().word;
+			return snapshot.docs[0].data() as Word;
 		})
 		.catch((error) => {
 			functions.logger.error("Error getting word of the day");
