@@ -15,7 +15,6 @@ const fetchWord = (queryString: string = ""): Promise<string> => {
 	return axios
 		.get(`${process.env.NEXT_PUBLIC_FIREBASE_API_URL}/word${queryString ? queryString : ""}`)
 		.then((resp) => {
-			console.log(resp);
 			return (resp.data?.data as Word).word;
 		})
 		.catch((err) => {

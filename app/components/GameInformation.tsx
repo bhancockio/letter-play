@@ -1,9 +1,34 @@
+import Link from "next/link";
 import React from "react";
 import { useGame } from "../context/gameContext";
 
 function GameInformation() {
 	const { gameState } = useGame();
-	const { targetWord, targetWordGuessed } = gameState;
+	const { targetWord, targetWordGuessed, outOfGuesses } = gameState;
+
+	const endOfGamePrompt = () => {
+		const bgColor = targetWordGuessed ? "bg-green-200" : "bg-red-200";
+		const textColor = targetWordGuessed ? "text-green-700" : "text-red-700";
+
+		return (
+			<div className={`${bgColor} ${textColor} font-semibold py-2 px-4 rounded-md my-5`}>
+				{targetWordGuessed ? (
+					<p>
+						You guessed {targetWord.toUpperCase()}. Great job! You should{" "}
+						<a href="/" className="underline">
+							create a free account
+						</a>{" "}
+						to save your stats/streaks.
+					</p>
+				) : (
+					<p>
+						The correct word was {targetWord.toUpperCase()}. Don't worry. Click New Game
+						below to start another game.
+					</p>
+				)}
+			</div>
+		);
+	};
 
 	return (
 		<div
@@ -33,29 +58,21 @@ function GameInformation() {
 			</div>
 
 			{/* Winner  (prompt to create a new acount) */}
-			{targetWordGuessed && (
+			{(targetWordGuessed || outOfGuesses) && (
 				<>
-					<div className="bg-green-200 py-2 px-4 rounded-md my-5">
-						<p className="text-green-700 font-semibold">
-							You guessed {targetWord.toUpperCase()}. Great job! You should{" "}
-							<a href="/" className="underline">
-								create a free account
-							</a>{" "}
-							to save your stats/streaks.
-						</p>
-					</div>
+					{endOfGamePrompt()}
 					<div className="flex flex-row justify-abround">
 						<button
 							type="button"
 							className="bg-green-500 py-2 px-3 tracking-tight mr-1 rounded-md text-white font-semibold"
 						>
-							New Game
+							<a href="?random=true">New Game</a>
 						</button>
 						<button
 							type="button"
 							className="bg-purple-500 py-2 px-3 tracking-tight mr-1 rounded-md text-white font-semibold"
 						>
-							Save
+							share
 						</button>
 						<button
 							type="button"

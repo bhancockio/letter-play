@@ -1,5 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { ALL_ENGLISH_FIVE_LETTERED_WORDS, MAXIMUM_LETTERS_IN_WORD } from "../utils/constants";
+import {
+	ALL_ENGLISH_FIVE_LETTERED_WORDS,
+	MAXIMUM_GUESSES,
+	MAXIMUM_LETTERS_IN_WORD
+} from "../utils/constants";
 import { fetchRandomWord, fetchWordForToday } from "../utils/wordUtil";
 import Message from "../interfaces/Message";
 import LetterGuess from "../interfaces/LetterGuess";
@@ -8,6 +12,7 @@ import { useRouter } from "next/router";
 export interface IGameState {
 	targetWord: string;
 	currentGuessCount: number;
+	outOfGuesses: boolean;
 	wordGuesses: string[];
 	currentGuess: string[];
 	currentLetterIndex: number;
@@ -28,9 +33,10 @@ export const GameContext = createContext<GameContextType | null>(null);
 
 const INITIAL_GAME_STATE: IGameState = {
 	targetWord: "",
-	wordGuesses: Array(6).fill(""),
-	currentGuess: Array(5).fill(""),
+	wordGuesses: Array(MAXIMUM_GUESSES).fill(""),
+	currentGuess: Array(MAXIMUM_LETTERS_IN_WORD).fill(""),
 	currentGuessCount: 0,
+	outOfGuesses: false,
 	currentLetterIndex: 0,
 	targetWordGuessed: false,
 	message: { show: false },
@@ -43,7 +49,7 @@ export default function GameContextComponent({ children }) {
 	const router = useRouter();
 
 	useEffect(() => {
-		const { random = false } = router.query;
+		const { random } = router.query;
 		// Fetch target word from API
 		const fetchWordPromise: Promise<string> = random ? fetchRandomWord() : fetchWordForToday();
 		fetchWordPromise
@@ -53,7 +59,7 @@ export default function GameContextComponent({ children }) {
 			.catch(() => {
 				setGameState({ ...gameState, targetWord: "" });
 			});
-	}, []);
+	}, [router.query]);
 
 	const setGameContext = (newGameState: IGameState) => {
 		setGameState({ ...gameState, ...newGameState });
@@ -69,7 +75,6 @@ export default function GameContextComponent({ children }) {
 	const handleKeyDown = (newKey: string) => {
 		// Ignore keys if user has already won
 		if (gameState.targetWordGuessed) return;
-		console.log(gameState);
 
 		// Convert keyboard inputs to lowercase for simplicity and consistency
 		const formattedKey = newKey.toLowerCase();
@@ -91,6 +96,7 @@ export default function GameContextComponent({ children }) {
 						return guess;
 					}),
 					currentLetterIndex: 0,
+					outOfGuesses: prevGameState.currentGuessCount + 1 === MAXIMUM_GUESSES,
 					currentGuess: Array(5).fill(""), // Reset the current guess
 					submissionStatus: "normal",
 					targetWordGuessed: userGuessedCorrectly(),
@@ -160,7 +166,6 @@ export default function GameContextComponent({ children }) {
 	// TODO: This wasn't linked to the state at before doing ghetto fix with keyboard
 	// TODO: Make sure word is actually an english word.
 	const isValidGuessSubmission = (): { validSubmission: boolean; message: Message } => {
-		console.log("isValidGuessSubmission", gameState.currentGuess);
 		// Make sure the user's guess doesn't contain empty characters/spaces
 		if (gameState.currentGuess.includes(" ") || gameState.currentGuess.includes("")) {
 			return {
