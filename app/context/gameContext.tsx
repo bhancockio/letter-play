@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { ALL_ENGLISH_FIVE_LETTERED_WORDS, MAXIMUM_LETTERS_IN_WORD } from "../utils/constants";
-import { fetchWord } from "../utils/wordFetcher";
+import { fetchRandomWord, fetchWordForToday } from "../utils/wordUtil";
 import Message from "../interfaces/Message";
 import LetterGuess from "../interfaces/LetterGuess";
+import { useRouter } from "next/router";
 
 export interface IGameState {
 	targetWord: string;
@@ -39,6 +40,20 @@ const INITIAL_GAME_STATE: IGameState = {
 
 export default function GameContextComponent({ children }) {
 	const [gameState, setGameState] = useState<IGameState>(INITIAL_GAME_STATE);
+	const router = useRouter();
+
+	useEffect(() => {
+		const { random = false } = router.query;
+		// Fetch target word from API
+		const fetchWordPromise: Promise<string> = random ? fetchRandomWord() : fetchWordForToday();
+		fetchWordPromise
+			.then((word) => {
+				setGameState({ ...gameState, targetWord: word });
+			})
+			.catch(() => {
+				setGameState({ ...gameState, targetWord: "" });
+			});
+	}, []);
 
 	const setGameContext = (newGameState: IGameState) => {
 		setGameState({ ...gameState, ...newGameState });
@@ -209,18 +224,6 @@ export default function GameContextComponent({ children }) {
 			}
 		});
 	};
-
-	useEffect(() => {
-		console.log("game context loading");
-		// Fetch target word from API
-		fetchWord()
-			.then((word) => {
-				setGameState({ ...gameState, targetWord: word });
-			})
-			.catch(() => {
-				setGameState({ ...gameState, targetWord: "" });
-			});
-	}, []);
 
 	return (
 		<GameContext.Provider
