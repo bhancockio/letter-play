@@ -46,11 +46,14 @@ const generateNewWordForDay = async (req: Request, res: Response) => {
 	const newWord = pickNewWordOfTheDay(existingWordsOfTheDay);
 	functions.logger.log("New word", newWord);
 
+	// Find puzzle count
+	const puzzleNumber = existingWordsOfTheDay.filter((word) => !!word.date).length + 1;
+
 	// Add the new word to the database
 	return admin
 		.firestore()
 		.doc(`words/${newWord}`)
-		.set({ word: newWord, date: moment().format("YYYY-MM-DD") })
+		.set({ word: newWord, date: moment().format("YYYY-MM-DD"), puzzleNumber: puzzleNumber })
 		.then(() => {
 			functions.logger.log("New word added to database");
 			return res.status(204).json({ message: "New word added to database" });
