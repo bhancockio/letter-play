@@ -3,14 +3,14 @@ import { auth, signInWithGoogle } from "../utils/firebase";
 
 import BarChartIcon from "@mui/icons-material/BarChartOutlined";
 import CloseIcon from "@mui/icons-material/Close";
+import { IUser } from "@backend/IUser";
 import Image from "next/image";
 import Link from "next/link";
 import MenuIcon from "@mui/icons-material/Menu";
-import { User } from "@backend/User";
 import { useUser } from "../context/userContext";
 
 interface IActionsProps {
-	user: User;
+	user: IUser;
 	handleLogin: () => void;
 	handleLogout: () => void;
 }

@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { useGame } from "../context/gameContext";
-import LetterGuess from "../interfaces/LetterGuess";
+
 import { KEYBOARD_KEYS } from "../utils/constants";
+import LetterGuess from "../interfaces/LetterGuess";
+import { useGame } from "../context/gameContext";
 
 interface IKeyboardKeyProps {
 	letter: string;
@@ -48,7 +49,7 @@ const KeyboardKey = ({ letter, onClick, lettersGuessed }: IKeyboardKeyProps) => 
 
 function Keyboard() {
 	const { gameState, handleKeyDown } = useGame();
-	const { targetWordGuessed, lettersGuessed, outOfGuesses } = gameState;
+	const { lettersGuessed, gameOver } = gameState;
 
 	// Reassigning event listeners everytime gamestate chnages.
 	// TODO: See if this can be moved somehwere else
@@ -64,7 +65,7 @@ function Keyboard() {
 		};
 	}, [gameState]);
 
-	if (targetWordGuessed || outOfGuesses) {
+	if (gameOver) {
 		return null;
 	}
 

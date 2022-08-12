@@ -1,12 +1,13 @@
-import { Response } from "express";
-import { FirebaseRequest } from "../types/FirebaseRequest";
-import { DocumentSnapshot } from "firebase-admin/firestore";
-import { DecodedIdToken } from "firebase-admin/auth";
-import { User } from "../types/User";
-import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import * as functions from "firebase-functions";
 
-const getUser = async (req: FirebaseRequest, res: Response) => {
+import { DecodedIdToken } from "firebase-admin/auth";
+import { DocumentSnapshot } from "firebase-admin/firestore";
+import { FirebaseRequest } from "../types/FirebaseRequest";
+import { IUser } from "../types/IUser";
+import { Response } from "express";
+
+const get = async (req: FirebaseRequest, res: Response) => {
 	const decodedIdToken: DecodedIdToken = req.decodedIdToken;
 	functions.logger.log("Getting user with uid", decodedIdToken.uid);
 
@@ -35,7 +36,7 @@ const getUser = async (req: FirebaseRequest, res: Response) => {
 
 	// User does not exist so create a new one.
 	functions.logger.log("User not found. Creating new user", decodedIdToken);
-	const user: User = {
+	const user: IUser = {
 		email: decodedIdToken.email as string,
 		uid: decodedIdToken.uid,
 		displayName: decodedIdToken.displayName || decodedIdToken.name,
@@ -58,5 +59,5 @@ const getUser = async (req: FirebaseRequest, res: Response) => {
 };
 
 module.exports = {
-	getUser
+	get
 };

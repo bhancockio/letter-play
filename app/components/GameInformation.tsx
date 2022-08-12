@@ -3,7 +3,7 @@ import { useGame } from "../context/gameContext";
 
 function GameInformation() {
 	const { gameState } = useGame();
-	const { targetWord, targetWordGuessed, outOfGuesses, puzzleNumber } = gameState;
+	const { targetWord, targetWordGuessed, gameOver, puzzleNumber } = gameState;
 
 	const endOfGamePrompt = () => {
 		const bgColor = targetWordGuessed ? "bg-green-200" : "bg-red-200";
@@ -54,7 +54,7 @@ function GameInformation() {
 			</div>
 
 			{/* Winner  (prompt to create a new acount) */}
-			{(targetWordGuessed || outOfGuesses) && (
+			{gameOver && (
 				<>
 					{endOfGamePrompt()}
 					<div className="flex flex-row justify-abround">

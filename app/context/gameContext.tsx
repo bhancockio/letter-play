@@ -1,20 +1,22 @@
-import { createContext, useContext, useEffect, useState } from "react";
 import {
 	ALL_ENGLISH_FIVE_LETTERED_WORDS,
 	MAXIMUM_GUESSES,
 	MAXIMUM_LETTERS_IN_WORD
 } from "../utils/constants";
+import { createContext, useContext, useEffect, useState } from "react";
 import { fetchRandomWord, fetchWordForToday } from "../utils/wordUtil";
-import Message from "../interfaces/Message";
+
+import { IWord } from "@backend/IWord";
 import LetterGuess from "../interfaces/LetterGuess";
+import Message from "../interfaces/Message";
+import { postStats } from "../utils/statsUtil";
 import { useRouter } from "next/router";
-import { Word } from "@backend/Word";
 
 export interface IGameState {
 	targetWord: string;
 	puzzleNumber: number;
 	currentGuessCount: number;
-	outOfGuesses: boolean;
+	gameOver: boolean;
 	wordGuesses: string[];
 	currentGuess: string[];
 	currentLetterIndex: number;
@@ -39,7 +41,7 @@ const INITIAL_GAME_STATE: IGameState = {
 	wordGuesses: Array(MAXIMUM_GUESSES).fill(""),
 	currentGuess: Array(MAXIMUM_LETTERS_IN_WORD).fill(""),
 	currentGuessCount: 0,
-	outOfGuesses: false,
+	gameOver: false,
 	currentLetterIndex: 0,
 	targetWordGuessed: false,
 	message: { show: false },
@@ -54,7 +56,7 @@ export default function GameContextComponent({ children }) {
 	useEffect(() => {
 		const { random } = router.query;
 		// Fetch target word from API
-		const fetchWordPromise: Promise<Word> = random ? fetchRandomWord() : fetchWordForToday();
+		const fetchWordPromise: Promise<IWord> = random ? fetchRandomWord() : fetchWordForToday();
 		fetchWordPromise
 			.then((fetchedword) => {
 				console.log("fetchedword", fetchedword);
@@ -80,7 +82,7 @@ export default function GameContextComponent({ children }) {
 		});
 	};
 
-	const handleKeyDown = (event: KeyboardEvent) => {
+	const handleKeyDown = async (event: KeyboardEvent) => {
 		// Ignore keys if user has already won
 		if (gameState.targetWordGuessed) return;
 
@@ -98,6 +100,10 @@ export default function GameContextComponent({ children }) {
 				// Update keyboard
 				updateKeyboardBasedOnGuess();
 
+				const targetWordGuessed = userGuessedCorrectly();
+				const gameOver =
+					gameState.currentGuessCount + 1 === MAXIMUM_GUESSES || targetWordGuessed;
+
 				setGameState((prevGameState) => ({
 					...prevGameState,
 					currentGuessCount: prevGameState.currentGuessCount + 1,
@@ -108,12 +114,20 @@ export default function GameContextComponent({ children }) {
 						return guess;
 					}),
 					currentLetterIndex: 0,
-					outOfGuesses: prevGameState.currentGuessCount + 1 === MAXIMUM_GUESSES,
+					gameOver: gameOver,
 					currentGuess: Array(5).fill(""), // Reset the current guess
 					submissionStatus: "normal",
-					targetWordGuessed: userGuessedCorrectly(),
+					targetWordGuessed: targetWordGuessed,
 					message: message
 				}));
+
+				if (gameOver) {
+					await postStats({
+						word: gameState.targetWord,
+						guessedCorrectly: targetWordGuessed,
+						numberOfGuesses: gameState.currentGuessCount + 1
+					});
+				}
 			} else {
 				// Show message
 				setGameState((prevGameState) => ({

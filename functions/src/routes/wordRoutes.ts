@@ -1,7 +1,8 @@
 import { Router } from "express";
-const { generateNewWordForDay, getWord } = require("../controllers/wordController");
+
+const { generateNewWordForDay, get } = require("../controllers/wordController");
 
 const router = Router();
 router.post("/generateNewWordForDay", generateNewWordForDay);
-router.get("/word", getWord);
+router.get("/word", get);
 module.exports = { routes: router };

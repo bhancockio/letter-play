@@ -1,7 +1,9 @@
-import { initializeApp, getApps } from "firebase/app";
-import { getFirestore, CollectionReference, collection, DocumentData } from "firebase/firestore";
+import { CollectionReference, DocumentData, collection, getFirestore } from "firebase/firestore";
+import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+import { getApps, initializeApp } from "firebase/app";
+
+import { IUser } from "@backend/IUser";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 
 const clientCredentials = {
 	apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -45,10 +47,7 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 	return collection(firestore, collectionName) as CollectionReference<T>;
 };
 
-// Import all your model types
-import { User } from "@backend/User";
-
 // export all your collections
-const usersCol = createCollection<User>("users");
+// const usersCol = createCollection<IUser>("users");
 
-export { firestore, usersCol, auth, signInWithGoogle, onAuthStateChanged };
+export { firestore, auth, signInWithGoogle, onAuthStateChanged };

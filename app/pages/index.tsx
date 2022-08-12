@@ -13,7 +13,7 @@ const IndexPage = () => {
 	if (width < 768) {
 		return (
 			<GameProvider>
-				<div className="max-w-5xl mx-auto">
+				<div>
 					<Notifications />
 				</div>
 				<div className="flex flex-col">
@@ -34,14 +34,14 @@ const IndexPage = () => {
 	// Desktop view
 	return (
 		<GameProvider>
-			<div className="max-w-5xl mx-auto">
+			<div>
 				<Notifications />
 			</div>
-			<div className="flex flex-row max-w-5xl mx-auto mb-5 ">
+			<div className="flex flex-row mb-5 ">
 				<div className="flex flex-1 flex-row gap-5">
 					<div className="flex flex-row">
 						<div className="flex flex-1" />
-						<div className="mt-12 mx-auto">
+						<div className="mt-2 mx-auto">
 							<GameInformation />
 						</div>
 					</div>

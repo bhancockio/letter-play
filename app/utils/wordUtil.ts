@@ -1,21 +1,21 @@
+import { IWord } from "@backend/IWord";
 import axios from "axios";
-import { Word } from "@backend/Word";
 
-export const fetchRandomWord = (): Promise<Word> => {
+export const fetchRandomWord = (): Promise<IWord> => {
 	const queryString = "?random=true";
 	return fetchWord(queryString);
 };
 
 // Date is formatted as YYYY-MM-DD
-export const fetchWordForToday = (): Promise<Word> => {
+export const fetchWordForToday = (): Promise<IWord> => {
 	return fetchWord();
 };
 
-const fetchWord = (queryString: string = ""): Promise<Word> => {
+const fetchWord = (queryString: string = ""): Promise<IWord> => {
 	return axios
 		.get(`${process.env.NEXT_PUBLIC_FIREBASE_API_URL}/word${queryString ? queryString : ""}`)
 		.then((resp) => {
-			return resp.data?.data as Word;
+			return resp.data?.data as IWord;
 		})
 		.catch((err) => {
 			console.error(err);

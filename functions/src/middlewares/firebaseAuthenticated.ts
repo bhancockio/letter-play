@@ -1,6 +1,8 @@
-import { Response, NextFunction } from "express";
+import { NextFunction, Response } from "express";
+
 import { DecodedIdToken } from "firebase-admin/auth";
 import { FirebaseRequest } from "../types/FirebaseRequest";
+
 import admin = require("firebase-admin");
 
 module.exports = (request: FirebaseRequest, response: Response, next: NextFunction) => {

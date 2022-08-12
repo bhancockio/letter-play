@@ -1,4 +1,5 @@
 import { Express } from "express";
+
 const functions = require("firebase-functions");
 const express = require("express");
 const admin = require("firebase-admin");
@@ -17,10 +18,10 @@ admin.initializeApp();
 /* ----------- HTTP FUNCTIONS ----------- */
 const userRoutes = require("./routes/userRoutes");
 const wordRoutes = require("./routes/wordRoutes");
-// const statRoutes = require("./routes/statRoutes");
+const statsRoutes = require("./routes/statsRoutes");
 
 app.use("/api", userRoutes.routes);
 app.use("/api", wordRoutes.routes);
-// app.use("/api", userRoutes.routes);
+app.use("/api", statsRoutes.routes);
 
 exports.app = functions.https.onRequest(app);

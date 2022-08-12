@@ -1,10 +1,12 @@
 import "../styles/globals.css";
-import { AppProps } from "next/app";
-import axios from "axios";
-import Head from "next/head";
+
 import React, { ReactElement } from "react";
+
+import { AppProps } from "next/app";
+import Head from "next/head";
 import Navbar from "../components/Navbar";
 import UserProvider from "../context/userContext";
+import axios from "axios";
 
 // Axios
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_FIREBASE_API_URL;
@@ -18,7 +20,9 @@ function App({ Component, pageProps }: AppProps): ReactElement {
 				<title>Letters Play</title>
 			</Head>
 			<Navbar />
-			<SafeComponet {...pageProps} />
+			<div className="max-w-5xl mx-auto">
+				<SafeComponet {...pageProps} />
+			</div>
 		</UserProvider>
 	);
 }

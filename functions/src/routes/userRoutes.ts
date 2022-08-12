@@ -1,7 +1,8 @@
 import { Router } from "express";
-const { getUser } = require("../controllers/userController");
-const firebaseAuthMiddleware = require("../middlewares/auth");
+
+const { get } = require("../controllers/userController");
+const firebaseAuthenticated = require("../middlewares/firebaseAuthenticated");
 
 const router = Router();
-router.get("/users", firebaseAuthMiddleware, getUser);
+router.get("/users", firebaseAuthenticated, get);
 module.exports = { routes: router };
