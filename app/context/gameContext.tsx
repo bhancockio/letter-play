@@ -27,7 +27,7 @@ export interface IGameState {
 export type GameContextType = {
 	gameState: IGameState;
 	setCurrentLetterIndex: (index: number) => void;
-	handleKeyDown: (key: string) => void;
+	handleKeyDown: (key: KeyboardEvent) => void;
 	setGameContext: (gameState: IGameState) => void;
 };
 
@@ -80,12 +80,16 @@ export default function GameContextComponent({ children }) {
 		});
 	};
 
-	const handleKeyDown = (newKey: string) => {
+	const handleKeyDown = (event: KeyboardEvent) => {
 		// Ignore keys if user has already won
 		if (gameState.targetWordGuessed) return;
 
+		const newKey = event.key;
+
+		// Make sure that the spacebar doesn't scroll down the page.
+		event.key === " " && event.preventDefault();
 		// Convert keyboard inputs to lowercase for simplicity and consistency
-		const formattedKey = newKey.toLowerCase();
+		const formattedKey = newKey?.toLowerCase();
 		// handle submission
 		const { validSubmission, message } = isValidGuessSubmission();
 
@@ -119,8 +123,10 @@ export default function GameContextComponent({ children }) {
 				}));
 			}
 		}
-		// Make sure that key is a letter
+		// Make sure that key is a letter or space
 		else if (formattedKey.length === 1 && formattedKey.match(/[a-z\s]/i)) {
+			// make sure space doesn't scroll down on the page.
+
 			// Update game state to show that the user guessed a letter
 			setGameState((prevGameState) => ({
 				...prevGameState,

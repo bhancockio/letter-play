@@ -53,8 +53,8 @@ function Keyboard() {
 	// Reassigning event listeners everytime gamestate chnages.
 	// TODO: See if this can be moved somehwere else
 	useEffect(() => {
-		const onKeyDown = (e) => {
-			handleKeyDown(e.key);
+		const onKeyDown = (e: KeyboardEvent) => {
+			handleKeyDown(e);
 		};
 		// Handle key presses
 		document.addEventListener("keydown", onKeyDown);
@@ -69,7 +69,7 @@ function Keyboard() {
 	}
 
 	return (
-		<div className="flex flex-col mx-2 mt-[-570px] lg:mt-0">
+		<div className="flex flex-col">
 			{KEYBOARD_KEYS.map((keyboardRow: any[], index: number) => (
 				<div key={index} className="flex flex-row justify-center mb-1">
 					{keyboardRow.map((keyValuePair) => (
