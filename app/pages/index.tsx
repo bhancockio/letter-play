@@ -1,9 +1,9 @@
-import React from "react";
 import GameInformation from "../components/GameInformation";
+import GameProvider from "../context/gameContext";
 import Keyboard from "../components/Keyboard";
 import LettersGrid from "../components/LettersGrid";
 import Notifications from "../components/Notifications";
-import GameProvider from "../context/gameContext";
+import React from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const IndexPage = () => {
@@ -47,7 +47,9 @@ const IndexPage = () => {
 					</div>
 					<div className="flex flex-row mx-0">
 						<div className="flex flex-1" />
-						<LettersGrid />
+						<div className="mt-2">
+							<LettersGrid />
+						</div>
 					</div>
 				</div>
 				<div className="flex flex-1">{/* How to video */}</div>
