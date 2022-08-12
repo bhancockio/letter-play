@@ -4,7 +4,6 @@ import { auth, signInWithGoogle } from "../utils/firebase";
 import BarChartIcon from "@mui/icons-material/BarChartOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
-import Letters from "../assets/images/letters.png";
 import Link from "next/link";
 import MenuIcon from "@mui/icons-material/Menu";
 import { User } from "@backend/User";
@@ -18,7 +17,7 @@ interface IActionsProps {
 
 const Actions = ({ user, handleLogin, handleLogout }: IActionsProps) => (
 	<>
-		<li className="mb-3 mt-4">
+		<li className="mb-3 mt-4 md:mb-0 md:mt-0">
 			<button
 				type="button"
 				className="btn text-white bg-green-500 hover:bg-green-700 hover:text-white"
@@ -27,7 +26,7 @@ const Actions = ({ user, handleLogin, handleLogout }: IActionsProps) => (
 			</button>
 		</li>
 
-		<li className="mb-3">
+		<li className="mb-3 md:mb-0">
 			{!user ? (
 				<button
 					type="button"
@@ -69,7 +68,7 @@ const Navbar = () => {
 				<div>
 					<Link href="/" className="btn btn-ghost normal-case text-xl">
 						<div className="flex flex-row content-center items-center gap-1 cursor-pointer">
-							<Image src={Letters} />
+							<Image src="/images/Letters.png" height={40} width={180} />
 							<span className="text-2xl font-semibold font-cursive text-neutral-content cursor-pointer">
 								Play
 							</span>
