@@ -7,7 +7,47 @@ import Image from "next/image";
 import Letters from "../assets/images/letters.png";
 import Link from "next/link";
 import MenuIcon from "@mui/icons-material/Menu";
+import { User } from "@backend/User";
 import { useUser } from "../context/userContext";
+
+interface IActionsProps {
+	user: User;
+	handleLogin: () => void;
+	handleLogout: () => void;
+}
+
+const Actions = ({ user, handleLogin, handleLogout }: IActionsProps) => (
+	<>
+		<li className="mb-3 mt-4">
+			<button
+				type="button"
+				className="btn text-white bg-green-500 hover:bg-green-700 hover:text-white"
+			>
+				<a href="?random=true">New Game</a>
+			</button>
+		</li>
+
+		<li className="mb-3">
+			{!user ? (
+				<button
+					type="button"
+					className="btn btn-outline text-white hover:bg-white hover:text-neutral"
+					onClick={handleLogin}
+				>
+					Login
+				</button>
+			) : (
+				<button
+					type="button"
+					className="btn btn-outline text-white hover:bg-white hover:text-neutral"
+					onClick={handleLogout}
+				>
+					Logout
+				</button>
+			)}
+		</li>
+	</>
+);
 
 const Navbar = () => {
 	const { user } = useUser();
@@ -22,39 +62,6 @@ const Navbar = () => {
 	};
 
 	const Links = [{ name: "Stats", link: "/stats", icon: <BarChartIcon /> }];
-
-	const Actions = () => (
-		<>
-			<li>
-				<button
-					type="button"
-					className="btn text-white bg-green-500 hover:bg-green-700 hover:text-white"
-				>
-					<a href="?random=true">New Game</a>
-				</button>
-			</li>
-
-			<li>
-				{!user ? (
-					<button
-						type="button"
-						className="btn btn-outline text-white hover:bg-white hover:text-neutral"
-						onClick={handleLogin}
-					>
-						Login
-					</button>
-				) : (
-					<button
-						type="button"
-						className="btn btn-outline text-white hover:bg-white hover:text-neutral"
-						onClick={handleLogout}
-					>
-						Logout
-					</button>
-				)}
-			</li>
-		</>
-	);
 
 	return (
 		<div className="navbar bg-neutral text-neutral-content/75 flex flex-col p-3 hover:text-neutral-content">
@@ -79,8 +86,8 @@ const Navbar = () => {
 							</Link>
 						</li>
 					))}
-					<div className="flex flex-1"></div>
-					<Actions />
+					<div className="flex flex-1" />
+					<Actions user={user} handleLogin={handleLogin} handleLogout={handleLogout} />
 				</ul>
 				<div
 					onClick={() => setOpen(!open)}
@@ -104,6 +111,11 @@ const Navbar = () => {
 								</Link>
 							</li>
 						))}
+						<Actions
+							user={user}
+							handleLogin={handleLogin}
+							handleLogout={handleLogout}
+						/>
 					</ul>
 				</div>
 			)}
