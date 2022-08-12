@@ -5,6 +5,9 @@ module.exports = {
 			flex: {
 				2: "2 2 0%"
 			}
+		},
+		fontFamily: {
+			cursive: ["Bradley Hand", "cursive"]
 		}
 	},
 	plugins: [require("@tailwindcss/typography"), require("daisyui")],

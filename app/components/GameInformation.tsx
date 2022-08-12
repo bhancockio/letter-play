@@ -30,7 +30,7 @@ function GameInformation() {
 	};
 
 	return (
-		<div className={`w-[341px] mx-auto`}>
+		<div className="w-[341px] mx-auto">
 			{/* Card about the game */}
 			<div className="flex flex-col p-4 rounded-md border-2 border-gray-300">
 				<div className="mb-2">

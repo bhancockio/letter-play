@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* GLOBAL STYLING */
+::-webkit-scrollbar {
+	display: none;
+  }
+
 /* Daisy UI Custom styling */
 
 /* Current dropdown content window goes off the screen. need to move it left */
