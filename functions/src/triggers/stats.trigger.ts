@@ -1,10 +1,11 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
+import * as admin from "firebase-admin";
+import * as functions from "firebase-functions";
+
+import { DocumentData, FieldValue, QueryDocumentSnapshot } from "firebase-admin/firestore";
 
 import { EventContext } from "firebase-functions/v1";
 import { IStats } from "../types/IStats";
 import { IUser } from "../types/IUser";
-import { QueryDocumentSnapshot } from "firebase-admin/firestore";
 
 exports.statsCreated = functions.firestore
 	.document("stats/{statsId}")
@@ -12,19 +13,20 @@ exports.statsCreated = functions.firestore
 		const stats = snap.data() as IStats;
 
 		if (stats.userId) {
+			functions.logger.info("Updating user stats");
 			await updateUserStats(stats);
 		}
 
+		functions.logger.info("Updating word stats");
 		await updateWordStats(stats);
 	});
 
-// TODO: Update personal users stats
 const updateUserStats = (stats: IStats) => {
 	return admin
 		.firestore()
 		.doc(`users/${stats.userId}`)
 		.get()
-		.then((doc: QueryDocumentSnapshot) => {
+		.then((doc: DocumentData) => {
 			return doc.data();
 		})
 		.then((user: IUser) => {
@@ -55,12 +57,12 @@ const updateUserStats = (stats: IStats) => {
 
 const updateWordStats = (stats: IStats) => {
 	return admin
-		.firstore()
+		.firestore()
 		.doc(`words/${stats.word}`)
 		.update({
-			gamesPlayed: admin.firestore.FieldValue.increment(1),
-			guessesMade: admin.firestore.FieldValue.increment(stats.numberOfGuesses),
-			gamesWon: admin.firestore.FieldValue.increment(stats.guessedCorrectly ? 1 : 0)
+			gamesPlayed: FieldValue.increment(1),
+			guessesMade: FieldValue.increment(stats.numberOfGuesses),
+			gamesWon: FieldValue.increment(stats.guessedCorrectly ? 1 : 0)
 		})
 		.catch((error: any) => {
 			functions.logger.error("Something went wrong updating word stats");

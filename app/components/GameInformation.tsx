@@ -1,9 +1,10 @@
 import React from "react";
+import moment from "moment";
 import { useGame } from "../context/gameContext";
 
 function GameInformation() {
 	const { gameState } = useGame();
-	const { targetWord, targetWordGuessed, gameOver, puzzleNumber } = gameState;
+	const { targetWord, targetWordGuessed, gameOver, puzzleNumber, date } = gameState;
 
 	const endOfGamePrompt = () => {
 		const bgColor = targetWordGuessed ? "bg-green-200" : "bg-red-200";
@@ -44,8 +45,10 @@ function GameInformation() {
 				</div>
 				{puzzleNumber && (
 					<div className="mb-2">
-						<h2 className="text-lg font-semibold text-slate-800">Daily Puzze #213</h2>
-						<p className="text-slate-700 mb-1">Mon, Aug 01</p>
+						<h2 className="text-lg font-semibold text-slate-800">
+							Daily Puzze #{puzzleNumber}
+						</h2>
+						<p className="text-slate-700 mb-1">{moment(date).format("MMMM Do YYYY")}</p>
 						<p className="text-slate-700 mb-1">
 							A new word is selected every day at midnight UTC
 						</p>

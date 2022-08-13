@@ -25,6 +25,7 @@ export interface IGameState {
 	message: Message;
 	submissionStatus: "normal" | "error";
 	lettersGuessed: Map<string, LetterGuess>;
+	date?: string;
 }
 
 export type GameContextType = {
@@ -64,7 +65,8 @@ export default function GameContextComponent({ children }) {
 				setGameState({
 					...gameState,
 					targetWord: fetchedword.word,
-					puzzleNumber: fetchedword.puzzleNumber
+					puzzleNumber: fetchedword.puzzleNumber,
+					date: fetchedword.date
 				});
 			})
 			.catch(() => {
