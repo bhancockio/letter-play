@@ -1,8 +1,7 @@
-import GameProvider, { useGame } from "../context/gameContext";
-import React, { useState } from "react";
-
 import DesktopGameView from "../components/DesktopGameView";
+import GameProvider from "../context/gameContext";
 import MobileGameView from "../components/MobileGameView";
+import React from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const IndexPage = () => {
