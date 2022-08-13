@@ -31,17 +31,21 @@ const updateUserStats = (stats: IStats) => {
 		})
 		.then((user: IUser) => {
 			const gamesPlayed = (user.gamesPlayed || 0) + 1;
-			const wins = (user.gamesPlayed || 0) + (stats.guessedCorrectly ? 1 : 0);
+			const wins = (user.wins || 0) + (stats.guessedCorrectly ? 1 : 0);
 			const winStreak = stats.guessedCorrectly ? (user.winStreak || 0) + 1 : 0;
-			const averageNumberOfTurns =
-				((user.averageNumberOfTurns || 0) * (user.gamesPlayed || 0) +
-					stats.numberOfGuesses) /
-				(user.gamesPlayed || 0 + 1);
+			let averageNumberOfTurns = user.averageNumberOfTurns;
+			// Only count using wins. Don't count losses.
+			if (stats.guessedCorrectly) {
+				averageNumberOfTurns =
+					((user.averageNumberOfTurns || 0) * (user.wins || 0) + stats.numberOfGuesses) /
+					((user.wins || 0) + 1);
+			}
 			return {
 				...user,
 				gamesPlayed: gamesPlayed,
 				wins: wins,
 				winStreak: winStreak,
+				longestWinStreak: Math.max(winStreak, user.longestWinStreak || 0),
 				averageNumberOfTurns: averageNumberOfTurns
 			};
 		})

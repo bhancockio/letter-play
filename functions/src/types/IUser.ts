@@ -11,6 +11,7 @@ export const userSchema = z.object({
 	gamesPlayed: z.number().gte(0).optional(),
 	wins: z.number().gte(0).optional(),
 	winStreak: z.number().gte(0).optional(),
+	longestWinStreak: z.number().gte(0).optional(),
 	averageNumberOfTurns: z.number().gte(0).optional()
 });
 
