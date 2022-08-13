@@ -26,6 +26,7 @@ export interface IGameState {
 	submissionStatus: "normal" | "error";
 	lettersGuessed: Map<string, LetterGuess>;
 	date?: string;
+	loading: boolean;
 }
 
 export type GameContextType = {
@@ -48,7 +49,8 @@ const INITIAL_GAME_STATE: IGameState = {
 	targetWordGuessed: false,
 	message: { show: false },
 	submissionStatus: "normal",
-	lettersGuessed: new Map<string, LetterGuess>()
+	lettersGuessed: new Map<string, LetterGuess>(),
+	loading: false
 };
 
 export default function GameContextComponent({ children }) {
@@ -56,21 +58,33 @@ export default function GameContextComponent({ children }) {
 	const router = useRouter();
 
 	useEffect(() => {
-		const { random } = router.query;
+		const { asPath } = router;
+
 		// Fetch target word from API
-		const fetchWordPromise: Promise<IWord> = random ? fetchRandomWord() : fetchWordForToday();
+		setGameState((prevState) => ({
+			...prevState,
+			loading: true
+		}));
+		const fetchWordPromise: Promise<IWord> =
+			asPath === "/?random=true" ? fetchRandomWord() : fetchWordForToday();
 		fetchWordPromise
 			.then((fetchedword) => {
 				console.log("fetchedword", fetchedword);
-				setGameState({
-					...gameState,
+				setGameState((previousState) => ({
+					...previousState,
 					targetWord: fetchedword.word,
 					puzzleNumber: fetchedword.puzzleNumber,
-					date: fetchedword.date
-				});
+					date: fetchedword.date,
+					loading: false
+				}));
 			})
 			.catch(() => {
-				setGameState({ ...gameState, targetWord: "", puzzleNumber: null });
+				setGameState((previousState) => ({
+					...previousState,
+					targetWord: "",
+					puzzleNumber: null,
+					loading: false
+				}));
 			});
 	}, [router.query]);
 
@@ -94,7 +108,7 @@ export default function GameContextComponent({ children }) {
 		// Make sure that the spacebar doesn't scroll down the page.
 		event.key === " " && event.preventDefault();
 		// Convert keyboard inputs to lowercase for simplicity and consistency
-		const formattedKey = newKey?.toLowerCase();
+		const formattedKey = newKey?.toLowerCase() || "";
 		// handle submission
 		const { validSubmission, message } = isValidGuessSubmission();
 

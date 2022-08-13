@@ -22,7 +22,14 @@ const Actions = ({ user, handleLogin, handleLogout }: IActionsProps) => (
 				type="button"
 				className="btn text-white bg-green-500 hover:bg-green-700 hover:text-white"
 			>
-				<a href="?random=true">New Game</a>
+				<a
+					href="?random=true"
+					onClick={() => {
+						console.log("new game clicked");
+					}}
+				>
+					New Game
+				</a>
 			</button>
 		</li>
 
