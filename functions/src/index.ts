@@ -14,6 +14,8 @@ app.use(bodyParser.json());
 admin.initializeApp();
 
 /* ----------- CLOUD TRIGGERS ----------- */
+const { statsCreated } = require("./triggers/stats.trigger");
+exports.statsCreated = statsCreated;
 
 /* ----------- HTTP FUNCTIONS ----------- */
 const userRoutes = require("./routes/userRoutes");

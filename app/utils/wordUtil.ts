@@ -28,7 +28,7 @@ export const isLetterInCorrectPositionInTargetWord = (
 	position: number,
 	targetWord: string
 ) => {
-	return targetWord[position].toLowerCase() === letter.toLowerCase();
+	return targetWord[position]?.toLowerCase() === letter.toLowerCase();
 };
 
 export const isLetterInTargetWord = (letter: string, targetWord: string) => {

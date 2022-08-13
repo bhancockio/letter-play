@@ -9,6 +9,7 @@ import { fetchRandomWord, fetchWordForToday } from "../utils/wordUtil";
 import { IWord } from "@backend/IWord";
 import LetterGuess from "../interfaces/LetterGuess";
 import Message from "../interfaces/Message";
+import moment from "moment";
 import { postStats } from "../utils/statsUtil";
 import { useRouter } from "next/router";
 
@@ -123,6 +124,7 @@ export default function GameContextComponent({ children }) {
 
 				if (gameOver) {
 					await postStats({
+						createdAt: moment().toISOString(),
 						word: gameState.targetWord,
 						guessedCorrectly: targetWordGuessed,
 						numberOfGuesses: gameState.currentGuessCount + 1
