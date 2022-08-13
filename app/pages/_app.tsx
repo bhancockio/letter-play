@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import React, { ReactElement } from "react";
 
 import { AppProps } from "next/app";
+import Footer from "../components/Footer";
 import Head from "next/head";
 import Navbar from "../components/Navbar";
 import UserProvider from "../context/userContext";
@@ -22,6 +23,7 @@ function App({ Component, pageProps }: AppProps): ReactElement {
 			<Navbar />
 			<div className="max-w-5xl mx-auto">
 				<SafeComponet {...pageProps} />
+				<Footer />
 			</div>
 		</UserProvider>
 	);
