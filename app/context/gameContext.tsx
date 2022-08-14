@@ -6,7 +6,7 @@ import {
 import { createContext, useContext, useEffect, useState } from "react";
 import { fetchRandomWord, fetchWordForToday } from "../utils/wordUtil";
 
-import { IWord } from "@backend/IWord";
+import { IWord } from "../../functions/src/types/IWord";
 import LetterGuess from "../interfaces/LetterGuess";
 import Message from "../interfaces/Message";
 import moment from "moment";

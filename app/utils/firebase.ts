@@ -2,7 +2,6 @@ import { CollectionReference, DocumentData, collection, getFirestore } from "fir
 import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { getApps, initializeApp } from "firebase/app";
 
-import { IUser } from "@backend/IUser";
 import { getAnalytics } from "firebase/analytics";
 
 const clientCredentials = {
@@ -46,8 +45,5 @@ const firestore = getFirestore();
 const createCollection = <T = DocumentData>(collectionName: string) => {
 	return collection(firestore, collectionName) as CollectionReference<T>;
 };
-
-// export all your collections
-// const usersCol = createCollection<IUser>("users");
 
 export { firestore, auth, signInWithGoogle, onAuthStateChanged };

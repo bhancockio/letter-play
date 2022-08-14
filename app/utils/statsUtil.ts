@@ -1,4 +1,4 @@
-import { IStats } from "@backend/IStats";
+import type { IStats } from "../../functions/src/types/IStats";
 import axios from "axios";
 
 export const postStats = (stats: IStats) => {
