@@ -2,7 +2,7 @@ import { auth, onAuthStateChanged } from "../utils/firebase";
 import axios, { AxiosResponse } from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { IUser } from "../../functions/src/types/IUser";
+import { IUser } from "shared";
 
 export interface IUserContext {
 	user: IUser;

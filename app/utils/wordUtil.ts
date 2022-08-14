@@ -1,4 +1,4 @@
-import { IWord } from "../../functions/src/types/IWord";
+import { IWord } from "shared";
 import axios from "axios";
 
 export const fetchRandomWord = (): Promise<IWord> => {
