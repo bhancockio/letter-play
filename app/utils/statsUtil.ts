@@ -1,4 +1,4 @@
-import type { IStats } from "shared";
+import type { IStats } from "@shared";
 import axios from "axios";
 
 export const postStats = (stats: IStats) => {

@@ -6,7 +6,7 @@ import { FirebaseRequest } from "../types/FirebaseRequest";
 import { Response } from "express";
 import { ZodError } from "zod";
 import { generateFirestoreUUID } from "../utils/database";
-import { statsSchema } from "../types/IStats";
+import { statsSchema } from "@shared";
 
 const post = async (req: FirebaseRequest, res: Response) => {
 	const decodedIdToken: DecodedIdToken | undefined = req.decodedIdToken;

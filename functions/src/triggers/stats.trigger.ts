@@ -4,8 +4,7 @@ import * as functions from "firebase-functions";
 import { DocumentData, FieldValue, QueryDocumentSnapshot } from "firebase-admin/firestore";
 
 import { EventContext } from "firebase-functions/v1";
-import { IStats } from "../types/IStats";
-import { IUser } from "../types/IUser";
+import { IStats, IUser } from "@shared";
 
 exports.statsCreated = functions.firestore
 	.document("stats/{statsId}")

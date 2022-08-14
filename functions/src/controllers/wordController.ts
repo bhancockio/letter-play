@@ -4,8 +4,7 @@ import * as functions from "firebase-functions";
 import { Request, Response } from "express";
 
 import { ALL_ENGLISH_FIVE_LETTERED_WORDS } from "../utils/words";
-import { IWord } from "../types/IWord";
-
+import { IWord } from "@shared";
 const GCLOUD_API_KEY = functions.config().gcloud.api_key;
 const moment = require("moment");
 

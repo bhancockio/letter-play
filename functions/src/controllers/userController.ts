@@ -4,7 +4,7 @@ import * as functions from "firebase-functions";
 import { DecodedIdToken } from "firebase-admin/auth";
 import { DocumentSnapshot } from "firebase-admin/firestore";
 import { FirebaseRequest } from "../types/FirebaseRequest";
-import { IUser } from "../types/IUser";
+import { IUser } from "@shared";
 import { Response } from "express";
 
 const get = async (req: FirebaseRequest, res: Response) => {
