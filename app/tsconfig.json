@@ -14,7 +14,7 @@
 		"isolatedModules": true,
 		"jsx": "preserve",
 		"incremental": true,
-		"paths": { "@backend/*": ["../functions/src/types/*"] } //https://stackoverflow.com/questions/65045106/share-types-between-client-and-server
+		"paths": { "@backend/*": ["../functions/src/types/*", "../functions/node_modules/**/*"] } //https://stackoverflow.com/questions/65045106/share-types-between-client-and-server
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
 	"exclude": ["node_modules"]

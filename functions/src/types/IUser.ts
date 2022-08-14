@@ -15,4 +15,4 @@ export const userSchema = z.object({
 	averageNumberOfTurns: z.number().gte(0).optional()
 });
 
-export type IUser = z.TypeOf<typeof userSchema>;
+export type IUser = z.infer<typeof userSchema>;

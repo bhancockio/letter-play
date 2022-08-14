@@ -8,4 +8,4 @@ export const statsSchema = z.object({
 	createdAt: z.string().optional()
 });
 
-export type IStats = z.TypeOf<typeof statsSchema>;
+export type IStats = z.infer<typeof statsSchema>;

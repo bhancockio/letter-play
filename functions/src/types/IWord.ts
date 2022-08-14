@@ -9,4 +9,4 @@ const wordSchema = z.object({
 	gamesWon: z.number().gte(0).optional()
 });
 
-export type IWord = z.TypeOf<typeof wordSchema>;
+export type IWord = z.infer<typeof wordSchema>;
