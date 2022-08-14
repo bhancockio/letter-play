@@ -1,4 +1,4 @@
-import type { IStats } from "@shared/types/IStats";
+import type { IStats } from "../../functions/src/types/IStats";
 import axios from "axios";
 
 export const postStats = (stats: IStats) => {
