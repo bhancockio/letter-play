@@ -5,12 +5,12 @@ import BarChartIcon from "@mui/icons-material/BarChartOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import Link from "next/link";
-import { IUser } from "@shared";
+import { User } from "@backend/User";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useUser } from "../context/userContext";
 
 interface IActionsProps {
-	user: IUser;
+	user: User;
 	handleLogin: () => void;
 	handleLogout: () => void;
 }

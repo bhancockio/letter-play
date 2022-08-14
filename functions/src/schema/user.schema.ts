@@ -14,5 +14,3 @@ export const userSchema = z.object({
 	longestWinStreak: z.number().gte(0).optional(),
 	averageNumberOfTurns: z.number().gte(0).optional()
 });
-
-export type IUser = z.infer<typeof userSchema>;

@@ -2,10 +2,10 @@ import { auth, onAuthStateChanged } from "../utils/firebase";
 import axios, { AxiosResponse } from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { IUser } from "@shared";
+import { User } from "@backend/User";
 
 export interface IUserContext {
-	user: IUser;
+	user: User;
 	setUser: (value) => void;
 	loadingUser: boolean;
 }
@@ -13,12 +13,12 @@ export interface IUserContext {
 export const UserContext = createContext<IUserContext>(null);
 
 export default function UserContextComponent({ children }) {
-	const [user, setUser] = useState<IUser | null>(null);
+	const [user, setUser] = useState<User | null>(null);
 	const [loadingUser, setLoadingUser] = useState<boolean>(true); // Helpful, to update the UI accordingly.
 
 	useEffect(() => {
 		// Listen authenticated user
-		const unsubscriber = onAuthStateChanged(auth, async (user: IUser) => {
+		const unsubscriber = onAuthStateChanged(auth, async (user: User) => {
 			try {
 				if (user) {
 					axios.defaults.headers.common["Authorization"] = `Bearer ${user.accessToken}`;

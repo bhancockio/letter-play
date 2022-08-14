@@ -4,7 +4,7 @@ import * as functions from "firebase-functions";
 import { DecodedIdToken } from "firebase-admin/auth";
 import { DocumentSnapshot } from "firebase-admin/firestore";
 import { FirebaseRequest } from "../types/FirebaseRequest";
-import { IUser } from "@shared";
+import { User } from "../types/User";
 import { Response } from "express";
 
 const get = async (req: FirebaseRequest, res: Response) => {
@@ -36,7 +36,7 @@ const get = async (req: FirebaseRequest, res: Response) => {
 
 	// User does not exist so create a new one.
 	functions.logger.log("User not found. Creating new user", decodedIdToken);
-	const user: IUser = {
+	const user: User = {
 		email: decodedIdToken.email as string,
 		uid: decodedIdToken.uid,
 		displayName: decodedIdToken.displayName || decodedIdToken.name,

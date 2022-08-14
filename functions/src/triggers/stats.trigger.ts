@@ -4,23 +4,24 @@ import * as functions from "firebase-functions";
 import { DocumentData, FieldValue, QueryDocumentSnapshot } from "firebase-admin/firestore";
 
 import { EventContext } from "firebase-functions/v1";
-import { IStats, IUser } from "@shared";
+import { User } from "../types/User";
+import { Stat } from "../types/Stat";
 
 exports.statsCreated = functions.firestore
 	.document("stats/{statsId}")
 	.onCreate(async (snap: QueryDocumentSnapshot, context: EventContext) => {
-		const stats = snap.data() as IStats;
+		const stat = snap.data() as Stat;
 
-		if (stats.userId) {
+		if (stat.userId) {
 			functions.logger.info("Updating user stats");
-			await updateUserStats(stats);
+			await updateUserStats(stat);
 		}
 
 		functions.logger.info("Updating word stats");
-		await updateWordStats(stats);
+		await updateWordStats(stat);
 	});
 
-const updateUserStats = (stats: IStats) => {
+const updateUserStats = (stats: Stat) => {
 	return admin
 		.firestore()
 		.doc(`users/${stats.userId}`)
@@ -28,7 +29,7 @@ const updateUserStats = (stats: IStats) => {
 		.then((doc: DocumentData) => {
 			return doc.data();
 		})
-		.then((user: IUser) => {
+		.then((user: User) => {
 			const gamesPlayed = (user.gamesPlayed || 0) + 1;
 			const wins = (user.wins || 0) + (stats.guessedCorrectly ? 1 : 0);
 			const winStreak = stats.guessedCorrectly ? (user.winStreak || 0) + 1 : 0;
@@ -48,7 +49,7 @@ const updateUserStats = (stats: IStats) => {
 				averageNumberOfTurns: averageNumberOfTurns
 			};
 		})
-		.then((updatedUser: IUser) => {
+		.then((updatedUser: User) => {
 			return admin.firestore().doc(`users/${stats.userId}`).set(updatedUser);
 		})
 		.catch((error: any) => {
@@ -58,7 +59,7 @@ const updateUserStats = (stats: IStats) => {
 		});
 };
 
-const updateWordStats = (stats: IStats) => {
+const updateWordStats = (stats: Stat) => {
 	return admin
 		.firestore()
 		.doc(`words/${stats.word}`)

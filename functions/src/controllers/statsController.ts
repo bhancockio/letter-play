@@ -6,7 +6,7 @@ import { FirebaseRequest } from "../types/FirebaseRequest";
 import { Response } from "express";
 import { ZodError } from "zod";
 import { generateFirestoreUUID } from "../utils/database";
-import { statsSchema } from "@shared";
+import { statSchema } from "../schema/stat.schema";
 
 const post = async (req: FirebaseRequest, res: Response) => {
 	const decodedIdToken: DecodedIdToken | undefined = req.decodedIdToken;
@@ -14,7 +14,7 @@ const post = async (req: FirebaseRequest, res: Response) => {
 
 	const uid = generateFirestoreUUID();
 	try {
-		const stats = statsSchema.parse(req.body);
+		const stats = statSchema.parse(req.body);
 		// If an authenticated user submitted data, add their uid
 		if (decodedIdToken) {
 			stats.userId = decodedIdToken.uid;

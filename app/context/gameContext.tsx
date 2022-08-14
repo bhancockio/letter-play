@@ -6,11 +6,11 @@ import {
 import { createContext, useContext, useEffect, useState } from "react";
 import { fetchRandomWord, fetchWordForToday } from "../utils/wordUtil";
 
-import { IWord } from "@shared";
+import { Word } from "@backend/Word";
 import LetterGuess from "../interfaces/LetterGuess";
 import Message from "../interfaces/Message";
 import moment from "moment";
-import { postStats } from "../utils/statsUtil";
+import { postStat } from "../utils/statsUtil";
 import { useRouter } from "next/router";
 
 export interface IGameState {
@@ -139,7 +139,7 @@ export default function GameContextComponent({ children }) {
 				}));
 
 				if (gameOver) {
-					await postStats({
+					await postStat({
 						createdAt: moment().toISOString(),
 						word: gameState.targetWord,
 						guessedCorrectly: targetWordGuessed,

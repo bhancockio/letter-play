@@ -8,5 +8,3 @@ const wordSchema = z.object({
 	guessesMade: z.number().gte(0).optional(),
 	gamesWon: z.number().gte(0).optional()
 });
-
-export type IWord = z.infer<typeof wordSchema>;

@@ -7,7 +7,13 @@
 		"outDir": "lib",
 		"sourceMap": true,
 		"strict": true,
-		"target": "es2017"
+		"target": "es2017",
+		"baseUrl": "./",
+		"paths": {
+			"shared": [
+				"lib" // the relative path to our generated library
+			]
+		}
 	},
 	"compileOnSave": true,
 	"include": ["src"]

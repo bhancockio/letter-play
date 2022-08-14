@@ -4,7 +4,7 @@ import * as functions from "firebase-functions";
 import { Request, Response } from "express";
 
 import { ALL_ENGLISH_FIVE_LETTERED_WORDS } from "../utils/words";
-import { IWord } from "@shared";
+import { Word } from "../types/Word";
 const GCLOUD_API_KEY = functions.config().gcloud.api_key;
 const moment = require("moment");
 
@@ -17,23 +17,23 @@ const generateNewWordForDay = async (req: Request, res: Response) => {
 
 	// Collect all words that have already been used
 	const currentDate = moment().format("YYYY-MM-DD");
-	const existingWordsOfTheDay: IWord[] = await admin
+	const existingWordsOfTheDay: Word[] = await admin
 		.firestore()
 		.collection("words")
 		.get()
-		.then((snapshot): IWord[] => {
+		.then((snapshot): Word[] => {
 			// Collect all words that have already been used in the app
-			const words: IWord[] = [];
+			const words: Word[] = [];
 			if (snapshot.empty) return [];
 			snapshot.forEach((doc) => {
-				words.push(doc.data() as IWord);
+				words.push(doc.data() as Word);
 			});
 			return words;
 		})
-		.catch((error): IWord[] => {
+		.catch((error): Word[] => {
 			functions.logger.error("Error collecting words of the day");
 			functions.logger.error(error);
-			return [] as IWord[];
+			return [] as Word[];
 		});
 
 	// Check to make sure that a word wasn't already picked for the day
@@ -67,9 +67,9 @@ const generateNewWordForDay = async (req: Request, res: Response) => {
 		});
 };
 
-const pickNewWordOfTheDay = (previousWordsOfTheDay: IWord[]): string => {
+const pickNewWordOfTheDay = (previousWordsOfTheDay: Word[]): string => {
 	let newWord;
-	const previousWords = previousWordsOfTheDay.map((wordOfTheDay: IWord) => wordOfTheDay.word);
+	const previousWords = previousWordsOfTheDay.map((wordOfTheDay: Word) => wordOfTheDay.word);
 	// Make sure that we don't pick a previously used word.
 	while (!newWord) {
 		newWord =
@@ -99,7 +99,7 @@ const get = (req: Request, res: Response) => {
 		});
 };
 
-const getRandomWord = async (): Promise<IWord> => {
+const getRandomWord = async (): Promise<Word> => {
 	const randomWord =
 		ALL_ENGLISH_FIVE_LETTERED_WORDS[
 			Math.floor(Math.random() * ALL_ENGLISH_FIVE_LETTERED_WORDS.length)
@@ -127,7 +127,7 @@ const getRandomWord = async (): Promise<IWord> => {
 		});
 };
 
-const getWordOfTheDay = async (): Promise<IWord> => {
+const getWordOfTheDay = async (): Promise<Word> => {
 	return admin
 		.firestore()
 		.collection("words")
@@ -139,7 +139,7 @@ const getWordOfTheDay = async (): Promise<IWord> => {
 			if (snapshot.empty) {
 				functions.logger.error("Something went wrong fetching the word of the day");
 			}
-			return snapshot.docs[0].data() as IWord;
+			return snapshot.docs[0].data() as Word;
 		})
 		.catch((error) => {
 			functions.logger.error("Error getting word of the day");

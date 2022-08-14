@@ -22,9 +22,7 @@
 		"next": "latest",
 		"react": "latest",
 		"react-dom": "latest",
-		"react-spinners": "^0.13.4",
-		"@shared": "file:../shared",
-		"zod": "^3.18.0"
+		"react-spinners": "^0.13.4"
 	},
 	"devDependencies": {
 		"@next/eslint-plugin-next": "^12.2.3",
