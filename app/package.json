@@ -23,7 +23,7 @@
 		"react": "latest",
 		"react-dom": "latest",
 		"react-spinners": "^0.13.4",
-		"zod": "^3.17.10"
+		"zod": "^3.18.0"
 	},
 	"devDependencies": {
 		"@next/eslint-plugin-next": "^12.2.3",
