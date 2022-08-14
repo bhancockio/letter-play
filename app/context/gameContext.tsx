@@ -10,8 +10,9 @@ import { Word } from "@backend/Word";
 import LetterGuess from "../interfaces/LetterGuess";
 import Message from "../interfaces/Message";
 import moment from "moment";
-import { postStat } from "../utils/statsUtil";
+import { postStat } from "../utils/statUtil";
 import { useRouter } from "next/router";
+import { useUser } from "./userContext";
 
 export interface IGameState {
 	targetWord: string;
@@ -56,6 +57,7 @@ const INITIAL_GAME_STATE: IGameState = {
 export default function GameContextComponent({ children }) {
 	const [gameState, setGameState] = useState<IGameState>(INITIAL_GAME_STATE);
 	const router = useRouter();
+	const { user } = useUser();
 
 	useEffect(() => {
 		const { asPath } = router;
@@ -65,7 +67,7 @@ export default function GameContextComponent({ children }) {
 			...prevState,
 			loading: true
 		}));
-		const fetchWordPromise: Promise<IWord> =
+		const fetchWordPromise: Promise<Word> =
 			asPath === "/?random=true" ? fetchRandomWord() : fetchWordForToday();
 		fetchWordPromise
 			.then((fetchedword) => {
@@ -140,6 +142,7 @@ export default function GameContextComponent({ children }) {
 
 				if (gameOver) {
 					await postStat({
+						userId: user?.uid,
 						createdAt: moment().toISOString(),
 						word: gameState.targetWord,
 						guessedCorrectly: targetWordGuessed,

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const wordSchema = z.object({
+export const wordSchema = z.object({
 	word: z.string().length(5),
 	date: z.string().optional(),
 	puzzleNumber: z.number().gte(0).optional(),

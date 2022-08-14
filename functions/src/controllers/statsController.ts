@@ -1,24 +1,17 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
-import { DecodedIdToken } from "firebase-admin/auth";
-import { FirebaseRequest } from "../types/FirebaseRequest";
 import { Response } from "express";
 import { ZodError } from "zod";
 import { generateFirestoreUUID } from "../utils/database";
 import { statSchema } from "../schema/stat.schema";
 
-const post = async (req: FirebaseRequest, res: Response) => {
-	const decodedIdToken: DecodedIdToken | undefined = req.decodedIdToken;
-	functions.logger.log("Posting stats with uid", decodedIdToken?.uid);
-
+const post = async (req: Request, res: Response) => {
 	const uid = generateFirestoreUUID();
 	try {
 		const stats = statSchema.parse(req.body);
 		// If an authenticated user submitted data, add their uid
-		if (decodedIdToken) {
-			stats.userId = decodedIdToken.uid;
-		}
+
 		return admin
 			.firestore()
 			.doc(`stats/${uid}`)
@@ -27,7 +20,9 @@ const post = async (req: FirebaseRequest, res: Response) => {
 				...stats
 			})
 			.then(() => {
-				return res.status(200).json({ message: "Stats added to database", data: stats });
+				return res
+					.status(200)
+					.json({ message: "Stats added to database", success: true, data: stats });
 			});
 	} catch (error) {
 		if (error instanceof ZodError) {
