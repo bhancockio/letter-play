@@ -3,9 +3,10 @@ import { auth, signInWithGoogle } from "../utils/firebase";
 
 import BarChartIcon from "@mui/icons-material/BarChartOutlined";
 import CloseIcon from "@mui/icons-material/Close";
-import { IUser } from "@shared/types/IUser";
 import Image from "next/image";
 import Link from "next/link";
+// import { IUser } from "../../shared/dist";
+import { IUser } from "shared";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useUser } from "../context/userContext";
 

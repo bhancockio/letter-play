@@ -5,7 +5,7 @@
 		"declaration": true,
 		"declarationMap": true,
 		"sourceMap": true,
-		"outDir": "../dist/shared",
+		"outDir": "./dist/",
 		"resolveJsonModule": true,
 		"strict": true,
 		"esModuleInterop": true,

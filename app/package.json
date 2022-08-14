@@ -23,6 +23,7 @@
 		"react": "latest",
 		"react-dom": "latest",
 		"react-spinners": "^0.13.4",
+		"shared": "file:../shared",
 		"zod": "^3.18.0"
 	},
 	"devDependencies": {
