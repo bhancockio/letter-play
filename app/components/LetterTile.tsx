@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { useGame } from "../context/gameContext";
 import { isLetterInCorrectPositionInTargetWord, isLetterInTargetWord } from "../utils/wordUtil";
+
+import { useGame } from "../context/gameContext";
 
 interface ILetterTilerProps {
 	letterIndex: number;

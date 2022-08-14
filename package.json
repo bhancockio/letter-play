@@ -1,0 +1,7 @@
+{
+	"name": "letters-play",
+	"version": "1.0.0",
+	"scripts": {
+		"build:lib": "cd shared && yarn build"
+	}
+}

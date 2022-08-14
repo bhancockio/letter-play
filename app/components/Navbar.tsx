@@ -3,7 +3,7 @@ import { auth, signInWithGoogle } from "../utils/firebase";
 
 import BarChartIcon from "@mui/icons-material/BarChartOutlined";
 import CloseIcon from "@mui/icons-material/Close";
-import type { IUser } from "../../functions/src/types/IUser";
+import { IUser } from "@shared/types/IUser";
 import Image from "next/image";
 import Link from "next/link";
 import MenuIcon from "@mui/icons-material/Menu";
