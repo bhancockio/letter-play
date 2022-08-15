@@ -1,34 +1,41 @@
 import { auth, onAuthStateChanged } from "../utils/firebase";
 import axios, { AxiosResponse } from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 import { User } from "@backend/User";
 
 export interface IUserContext {
-	user: User;
-	setUser: (value) => void;
+	user: User | null;
+	setUser: (value: User) => void;
 	loadingUser: boolean;
 }
 
-export const UserContext = createContext<IUserContext>(null);
+export const UserContext = createContext<IUserContext>({} as IUserContext);
+type Props = {
+	children?: ReactNode;
+};
 
-export default function UserContextComponent({ children }) {
+export default function UserContextComponent(props: Props) {
 	const [user, setUser] = useState<User | null>(null);
 	const [loadingUser, setLoadingUser] = useState<boolean>(true); // Helpful, to update the UI accordingly.
 
 	useEffect(() => {
 		// Listen authenticated user
-		const unsubscriber = onAuthStateChanged(auth, async (user: User) => {
+		const unsubscriber = onAuthStateChanged(auth, async (user) => {
 			try {
 				if (user) {
-					axios.defaults.headers.common["Authorization"] = `Bearer ${user.accessToken}`;
+					const token = (await user.getIdTokenResult())?.token;
+					console.log("user", token);
+					axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 					// Look for the user doc in your Firestore (if you have one):
 					const fbUser = await axios
 						.get(`/users`)
 						.then((res: AxiosResponse) => res.data)
-						.catch(() => null);
-					setUser({ ...fbUser, ...user });
-				} else setUser(null);
+						.catch(() => {});
+					setUser({ ...(fbUser as User) });
+				} else {
+					setUser(null);
+				}
 			} catch (error) {
 				setUser(null);
 				// Most probably a connection error. Handle appropriately.
@@ -43,7 +50,7 @@ export default function UserContextComponent({ children }) {
 
 	return (
 		<UserContext.Provider value={{ user, setUser, loadingUser }}>
-			{children}
+			{props.children}
 		</UserContext.Provider>
 	);
 }

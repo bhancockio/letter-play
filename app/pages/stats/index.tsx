@@ -13,7 +13,9 @@ function Stats() {
 			const gameStatKeys = Object.keys(DEFAULT_GAME_STATS);
 			Object.keys(user).forEach((key) => {
 				if (gameStatKeys.includes(key)) {
-					udpateGameStats[key].stat = user[key];
+					// udpateGameStats[key].stat = user[key] as number;
+					(udpateGameStats[key as keyof typeof DEFAULT_GAME_STATS] as any).stat =
+						user[key as keyof typeof user];
 				}
 			});
 			setGameStats(udpateGameStats);

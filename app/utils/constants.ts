@@ -29,7 +29,11 @@ export const DEFAULT_GAME_STATS = {
 };
 
 // QWERTY Keyboard
-export const KEYBOARD_KEYS = [
+export type KeyboardKeyValuePair = {
+	key: string;
+	value: string;
+};
+export const KEYBOARD_KEYS: KeyboardKeyValuePair[][] = [
 	[
 		{ key: "Q", value: "Q" },
 		{ key: "W", value: "W" },

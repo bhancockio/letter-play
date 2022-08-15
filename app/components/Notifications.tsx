@@ -2,8 +2,8 @@ import React from "react";
 import { useGame } from "../context/gameContext";
 
 function Notifications() {
-	const { gameState } = useGame();
-	const { message, submissionStatus } = gameState;
+	const game = useGame();
+	const { message, submissionStatus } = game.state;
 
 	const getStylesForMessageType = () => {
 		if (submissionStatus === "error") {

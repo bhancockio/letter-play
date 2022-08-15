@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { isLetterInCorrectPositionInTargetWord, isLetterInTargetWord } from "../utils/wordUtil";
 
 import { useGame } from "../context/gameContext";
@@ -10,40 +10,44 @@ interface ILetterTilerProps {
 }
 
 function LetterTile({ letterIndex, letter, guessRowIndex }: ILetterTilerProps) {
-	const { gameState, setCurrentLetterIndex } = useGame();
-	const { submissionStatus } = gameState;
-	const [isActiveLetter, setIsActiveLetter] = React.useState(false);
+	const game = useGame();
+	const {
+		submissionStatus,
+		currentLetterIndex,
+		currentGuessCount = -1,
+		targetWord = ""
+	} = game.state;
+	const [isActiveLetter, setIsActiveLetter] = useState(false);
 
 	useEffect(() => {
 		setIsActiveLetter(
-			letterIndex === gameState.currentLetterIndex &&
-				guessRowIndex === gameState.currentGuessCount
+			letterIndex === currentLetterIndex && guessRowIndex === currentGuessCount
 		);
-	}, [gameState, guessRowIndex, letterIndex]);
+	}, [currentLetterIndex, currentGuessCount, guessRowIndex, letterIndex]);
 
 	const handleClick = () => {
 		// Only set the current letter if the user clicks the active word row.
-		if (guessRowIndex === gameState.currentGuessCount) {
-			setCurrentLetterIndex(letterIndex);
+		if (guessRowIndex === currentGuessCount) {
+			game.setCurrentLetterIndex(letterIndex);
 		}
 	};
 
 	const getTileStyle = () => {
-		if (guessRowIndex < gameState.currentGuessCount) {
+		if (guessRowIndex < currentGuessCount) {
 			// Letter is in the correct spot
-			if (isLetterInCorrectPositionInTargetWord(letter, letterIndex, gameState.targetWord)) {
+			if (isLetterInCorrectPositionInTargetWord(letter, letterIndex, targetWord)) {
 				return "bg-green-500 border-green-500 text-white";
 			}
 
 			// Letter is in the target word but in the wrong spot
-			if (isLetterInTargetWord(letter, gameState.targetWord)) {
+			if (isLetterInTargetWord(letter, targetWord)) {
 				return "bg-orange-400 border-orange-400 text-white";
 			}
 			// Letter is not in the target word
 			return "bg-gray-500 border-gray-500 text-white";
 		}
 
-		if (guessRowIndex === gameState.currentGuessCount && submissionStatus === "error") {
+		if (guessRowIndex === currentGuessCount && submissionStatus === "error") {
 			return "bg-white border-red-500 text-red-500";
 		}
 		// Letter is currently being guessed or will be guesed in the future

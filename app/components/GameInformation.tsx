@@ -3,8 +3,9 @@ import moment from "moment";
 import { useGame } from "../context/gameContext";
 
 function GameInformation() {
-	const { gameState } = useGame();
-	const { targetWord, targetWordGuessed, gameOver, puzzleNumber, date } = gameState;
+	const game = useGame();
+
+	const { targetWord, targetWordGuessed, gameOver, puzzleNumber, date } = game.state;
 
 	const endOfGamePrompt = () => {
 		const bgColor = targetWordGuessed ? "bg-green-200" : "bg-red-200";
@@ -14,7 +15,7 @@ function GameInformation() {
 			<div className={`${bgColor} ${textColor} font-semibold py-2 px-4 rounded-md my-5`}>
 				{targetWordGuessed ? (
 					<p>
-						You guessed {targetWord.toUpperCase()}. Great job! You should{" "}
+						You guessed {targetWord?.toUpperCase()}. Great job! You should{" "}
 						<a href="/" className="underline">
 							create a free account
 						</a>{" "}
@@ -22,8 +23,8 @@ function GameInformation() {
 					</p>
 				) : (
 					<p>
-						The correct word was {targetWord.toUpperCase()}. Don&apos;t worry. Click New
-						Game below to start another game.
+						The correct word was {targetWord?.toUpperCase()}. Don&apos;t worry. Click
+						New Game below to start another game.
 					</p>
 				)}
 			</div>
@@ -43,7 +44,7 @@ function GameInformation() {
 						games, challenge others and learn about words.
 					</p>
 				</div>
-				{puzzleNumber && (
+				{puzzleNumber >= 0 && (
 					<div className="mb-2">
 						<h2 className="text-lg font-semibold text-slate-800">
 							Daily Puzze #{puzzleNumber}

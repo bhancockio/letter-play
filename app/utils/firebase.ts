@@ -1,4 +1,4 @@
-import { CollectionReference, DocumentData, collection, getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import { GoogleAuthProvider, getAuth, onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { getApps, initializeApp } from "firebase/app";
 
@@ -40,10 +40,5 @@ const signInWithGoogle = () => {
 // SOURCE: https://javascript.plainenglish.io/using-firestore-with-typescript-in-the-v9-sdk-cf36851bb099
 // Export firestore incase we need to access it directly
 const firestore = getFirestore();
-
-// This is just a helper to add the type to the db responses
-const createCollection = <T = DocumentData>(collectionName: string) => {
-	return collection(firestore, collectionName) as CollectionReference<T>;
-};
 
 export { firestore, auth, signInWithGoogle, onAuthStateChanged };

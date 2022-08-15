@@ -5,10 +5,10 @@ import React from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const IndexPage = () => {
-	const { width } = useWindowDimensions();
+	const windowDimensions = useWindowDimensions();
 
 	// // Mobile view
-	if (width < 768) {
+	if (windowDimensions?.width < 768) {
 		return (
 			<GameProvider>
 				<MobileGameView />

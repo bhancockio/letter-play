@@ -19,7 +19,7 @@ const fetchWord = (queryString: string = ""): Promise<Word> => {
 		})
 		.catch((err) => {
 			console.error(err);
-			return null;
+			throw new Error(err);
 		});
 };
 

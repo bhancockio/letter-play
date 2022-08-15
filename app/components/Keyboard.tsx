@@ -1,13 +1,13 @@
+import { KEYBOARD_KEYS, KeyboardKeyValuePair } from "../utils/constants";
 import React, { useEffect } from "react";
 
-import { KEYBOARD_KEYS } from "../utils/constants";
 import LetterGuess from "../interfaces/LetterGuess";
 import { useGame } from "../context/gameContext";
 
 interface IKeyboardKeyProps {
 	letter: string;
 	onClick: () => void;
-	lettersGuessed: Map<string, LetterGuess>;
+	lettersGuessed: Map<string, LetterGuess> | undefined;
 }
 
 const KeyboardKey = ({ letter, onClick, lettersGuessed }: IKeyboardKeyProps) => {
@@ -25,7 +25,7 @@ const KeyboardKey = ({ letter, onClick, lettersGuessed }: IKeyboardKeyProps) => 
 	}
 
 	// Handle letters that have been guessed
-	const lettterGuessed = lettersGuessed.get(letter);
+	const lettterGuessed = lettersGuessed?.get(letter);
 	if (lettterGuessed) {
 		textColor = "text-white";
 		if (lettterGuessed.inCorrectSpot) {
@@ -48,8 +48,10 @@ const KeyboardKey = ({ letter, onClick, lettersGuessed }: IKeyboardKeyProps) => 
 };
 
 function Keyboard() {
-	const { gameState, handleKeyDown } = useGame();
-	const { lettersGuessed, gameOver } = gameState;
+	const game = useGame();
+
+	const handleKeyDown = game.handleKeyDown;
+	const { lettersGuessed, gameOver } = game.state;
 
 	// Reassigning event listeners everytime gamestate chnages.
 	// TODO: See if this can be moved somehwere else
@@ -63,7 +65,7 @@ function Keyboard() {
 		return () => {
 			document.removeEventListener("keydown", onKeyDown);
 		};
-	}, [gameState]);
+	}, [game.state]);
 
 	if (gameOver) {
 		return null;
@@ -71,7 +73,7 @@ function Keyboard() {
 
 	return (
 		<div className="flex flex-col">
-			{KEYBOARD_KEYS.map((keyboardRow: any[], index: number) => (
+			{KEYBOARD_KEYS.map((keyboardRow: KeyboardKeyValuePair[], index: number) => (
 				<div key={index} className="flex flex-row justify-center mb-1">
 					{keyboardRow.map((keyValuePair) => (
 						<KeyboardKey

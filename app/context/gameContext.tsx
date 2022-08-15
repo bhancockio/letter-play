@@ -3,12 +3,12 @@ import {
 	MAXIMUM_GUESSES,
 	MAXIMUM_LETTERS_IN_WORD
 } from "../utils/constants";
-import { createContext, useContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { fetchRandomWord, fetchWordForToday } from "../utils/wordUtil";
 
-import { Word } from "@backend/Word";
 import LetterGuess from "../interfaces/LetterGuess";
 import Message from "../interfaces/Message";
+import { Word } from "@backend/Word";
 import moment from "moment";
 import { postStat } from "../utils/statUtil";
 import { useRouter } from "next/router";
@@ -31,17 +31,17 @@ export interface IGameState {
 }
 
 export type GameContextType = {
-	gameState: IGameState;
+	state: IGameState;
 	setCurrentLetterIndex: (index: number) => void;
-	handleKeyDown: (key: KeyboardEvent) => void;
+	handleKeyDown: (key: KeyboardEvent | string) => void;
 	setGameContext: (gameState: IGameState) => void;
 };
 
-export const GameContext = createContext<GameContextType | null>(null);
+export const GameContext = createContext<GameContextType>({} as GameContextType); // TODO: Currently doing this to avoid null issues
 
 const INITIAL_GAME_STATE: IGameState = {
 	targetWord: "",
-	puzzleNumber: null,
+	puzzleNumber: -1,
 	wordGuesses: Array(MAXIMUM_GUESSES).fill(""),
 	currentGuess: Array(MAXIMUM_LETTERS_IN_WORD).fill(""),
 	currentGuessCount: 0,
@@ -54,7 +54,11 @@ const INITIAL_GAME_STATE: IGameState = {
 	loading: false
 };
 
-export default function GameContextComponent({ children }) {
+interface Props {
+	children?: ReactNode;
+}
+
+export default function GameContextComponent(props: Props) {
 	const [gameState, setGameState] = useState<IGameState>(INITIAL_GAME_STATE);
 	const router = useRouter();
 	const { user } = useUser();
@@ -72,10 +76,10 @@ export default function GameContextComponent({ children }) {
 		fetchWordPromise
 			.then((fetchedword) => {
 				console.log("fetchedword", fetchedword);
-				setGameState((previousState) => ({
+				setGameState((previousState: IGameState) => ({
 					...previousState,
 					targetWord: fetchedword.word,
-					puzzleNumber: fetchedword.puzzleNumber,
+					puzzleNumber: fetchedword.puzzleNumber || -1,
 					date: fetchedword.date,
 					loading: false
 				}));
@@ -84,7 +88,7 @@ export default function GameContextComponent({ children }) {
 				setGameState((previousState) => ({
 					...previousState,
 					targetWord: "",
-					puzzleNumber: null,
+					puzzleNumber: -1,
 					loading: false
 				}));
 			});
@@ -101,14 +105,20 @@ export default function GameContextComponent({ children }) {
 		});
 	};
 
-	const handleKeyDown = async (event: KeyboardEvent) => {
+	const handleKeyDown = async (event: KeyboardEvent | string) => {
 		// Ignore keys if user has already won
 		if (gameState.targetWordGuessed) return;
 
-		const newKey = event.key;
+		// TODO: Is there a better way to do this?
+		let newKey: string = "";
+		if (typeof event === "function") {
+			// Make sure that the spacebar doesn't scroll down the page.
+			(event as KeyboardEvent).key === " " && (event as KeyboardEvent).preventDefault();
+		} else {
+			newKey = event as string;
+		}
+		console.log("newKey", newKey);
 
-		// Make sure that the spacebar doesn't scroll down the page.
-		event.key === " " && event.preventDefault();
 		// Convert keyboard inputs to lowercase for simplicity and consistency
 		const formattedKey = newKey?.toLowerCase() || "";
 		// handle submission
@@ -281,9 +291,9 @@ export default function GameContextComponent({ children }) {
 
 	return (
 		<GameContext.Provider
-			value={{ gameState, setCurrentLetterIndex, handleKeyDown, setGameContext }}
+			value={{ state: gameState, setCurrentLetterIndex, handleKeyDown, setGameContext }}
 		>
-			{children}
+			{props.children}
 		</GameContext.Provider>
 	);
 }

@@ -7,9 +7,9 @@ import React from "react";
 import { useGame } from "../context/gameContext";
 
 function DesktopGameView() {
-	const { gameState } = useGame();
+	const game = useGame();
 
-	if (gameState.loading) {
+	if (!game || game.state.loading) {
 		return <Loading />;
 	}
 	return (

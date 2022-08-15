@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useGame } from "../context/gameContext";
+
 import LetterTile from "./LetterTile";
+import { useGame } from "../context/gameContext";
 
 interface IWordProps {
 	guessRowIndex: number;
 }
 
 function Word({ guessRowIndex }: IWordProps) {
-	const { gameState } = useGame();
+	const game = useGame();
+	const { currentGuessCount = 0, wordGuesses, currentGuess } = game.state;
 	const [word, setWord] = useState(Array(5).fill(""));
 
 	useEffect(() => {
 		// If current row has already been guessed, show the word.
-		if (guessRowIndex < gameState.currentGuessCount) {
-			const guess = gameState.wordGuesses[guessRowIndex];
+		if (guessRowIndex < currentGuessCount) {
+			const guess = wordGuesses[guessRowIndex];
 			setWord(guess.split(""));
-		} else if (guessRowIndex === gameState.currentGuessCount) {
-			setWord(gameState.currentGuess);
+		} else if (guessRowIndex === currentGuessCount) {
+			setWord(currentGuess);
 		} else {
 			// Otherwise, show the word with blanks.
 			setWord(Array(5).fill(""));
 		}
-	}, [gameState]);
+	}, [game.state]);
 
 	return (
 		<div className="grid grid-cols-5 gap-1 mx-auto sm:max-w-max sm:gap-2 mb-1 sm:mb-2">

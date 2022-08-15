@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 
 type WindowDimensions = {
-	width: number | undefined;
-	height: number | undefined;
+	width: number | 0;
+	height: number | 0;
 };
 
 // https://dev.to/adrien/creating-a-custom-react-hook-to-get-the-window-s-dimensions-in-next-js-135k
 const useWindowDimensions = (): WindowDimensions => {
 	const [windowDimensions, setWindowDimensions] = useState<WindowDimensions>({
-		width: undefined,
-		height: undefined
+		width: 0,
+		height: 0
 	});
 
 	useEffect(() => {
