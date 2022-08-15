@@ -50,7 +50,7 @@ const KeyboardKey = ({ letter, onClick, lettersGuessed }: IKeyboardKeyProps) => 
 function Keyboard() {
 	const game = useGame();
 
-	const handleKeyDown = game.handleKeyDown;
+	const { handleKeyDown } = game;
 	const { lettersGuessed, gameOver } = game.state;
 
 	// Reassigning event listeners everytime gamestate chnages.
