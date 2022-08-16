@@ -109,15 +109,15 @@ export default function GameContextComponent(props: Props) {
 		// Ignore keys if user has already won
 		if (gameState.targetWordGuessed) return;
 
-		// TODO: Is there a better way to do this?
+		// Handle multiple types of key presss sources
 		let newKey: string = "";
-		if (typeof event === "function") {
+		if (event instanceof KeyboardEvent) {
 			// Make sure that the spacebar doesn't scroll down the page.
 			(event as KeyboardEvent).key === " " && (event as KeyboardEvent).preventDefault();
+			newKey = (event as KeyboardEvent).key as string;
 		} else {
 			newKey = event as string;
 		}
-		console.log("newKey", newKey);
 
 		// Convert keyboard inputs to lowercase for simplicity and consistency
 		const formattedKey = newKey?.toLowerCase() || "";
