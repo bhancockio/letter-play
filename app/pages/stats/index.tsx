@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 
 import { DEFAULT_GAME_STATS } from "../../utils/constants";
+import { User } from "@backend/User";
 import { useUser } from "../../context/userContext";
 
 function Stats() {
@@ -11,11 +12,12 @@ function Stats() {
 		if (user) {
 			const udpateGameStats = { ...DEFAULT_GAME_STATS };
 			const gameStatKeys = Object.keys(DEFAULT_GAME_STATS);
+			type GameStatKeys = keyof typeof DEFAULT_GAME_STATS;
+			type UserKeys = keyof User;
 			Object.keys(user).forEach((key) => {
 				if (gameStatKeys.includes(key)) {
 					// udpateGameStats[key].stat = user[key] as number;
-					(udpateGameStats[key as keyof typeof DEFAULT_GAME_STATS] as any).stat =
-						user[key as keyof typeof user];
+					(udpateGameStats[key as GameStatKeys] as any).stat = user[key as UserKeys];
 				}
 			});
 			setGameStats(udpateGameStats);

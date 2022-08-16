@@ -7,19 +7,9 @@ import useWindowDimensions from "../hooks/useWindowDimensions";
 const IndexPage = () => {
 	const windowDimensions = useWindowDimensions();
 
-	// Mobile view
-	if (windowDimensions?.width < 768) {
-		return (
-			<GameProvider>
-				<MobileGameView />
-			</GameProvider>
-		);
-	}
-
-	// Desktop view
 	return (
 		<GameProvider>
-			<DesktopGameView />
+			{windowDimensions?.width < 768 ? <MobileGameView /> : <DesktopGameView />}
 		</GameProvider>
 	);
 };

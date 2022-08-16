@@ -23,22 +23,19 @@ export const INITIAL_GAME_STATE: IGameState = {
 
 export const DEFAULT_GAME_STATS = {
 	gamesPlayed: {
-		key: "gamesPlayed",
 		logo: ExtensionOutlinedIcon,
 		text: "Games Played",
 		stat: 0
 	},
-	winRatio: { key: "winRatio", logo: TrendingUpOutlinedIcon, text: "Win Ratio", stat: 0 },
-	wins: { key: "wins", logo: TrendingUpOutlinedIcon, text: "Wins", stat: 0 },
+	winRatio: { logo: TrendingUpOutlinedIcon, text: "Win Ratio", stat: 0 },
+	wins: { logo: TrendingUpOutlinedIcon, text: "Wins", stat: 0 },
 	longestWinStreak: {
 		logo: TrendingUpOutlinedIcon,
-		key: "longestWinStreak",
 		text: "Longest Win Streak",
 		stat: 0
 	},
-	winStreak: { logo: TrendingUpOutlinedIcon, key: "winStreak", text: "Win Streak", stat: 0 },
+	winStreak: { logo: TrendingUpOutlinedIcon, text: "Win Streak", stat: 0 },
 	averageNumberOfTurns: {
-		key: "averageNumberOfTurns",
 		logo: TrendingUpOutlinedIcon,
 		text: "Average # of Turns",
 		stat: 0
