@@ -1,8 +1,25 @@
 import ExtensionOutlinedIcon from "@mui/icons-material/ExtensionOutlined";
+import { IGameState } from "context/gameContext";
+import { LetterGuess } from "types/LetterGuess";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 
 export const MAXIMUM_LETTERS_IN_WORD = 5;
 export const MAXIMUM_GUESSES = 6;
+
+export const INITIAL_GAME_STATE: IGameState = {
+	targetWord: "",
+	puzzleNumber: -1,
+	wordGuesses: Array(MAXIMUM_GUESSES).fill(""),
+	currentGuess: Array(MAXIMUM_LETTERS_IN_WORD).fill(""),
+	currentGuessCount: 0,
+	gameOver: false,
+	currentLetterIndex: 0,
+	targetWordGuessed: false,
+	message: { show: false },
+	submissionStatus: "normal",
+	lettersGuessed: new Map<string, LetterGuess>(),
+	loading: false
+};
 
 export const DEFAULT_GAME_STATS = {
 	gamesPlayed: {

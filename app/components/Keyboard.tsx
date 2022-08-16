@@ -1,7 +1,7 @@
 import { KEYBOARD_KEYS, KeyboardKeyValuePair } from "../utils/constants";
 import React, { useEffect } from "react";
 
-import LetterGuess from "../interfaces/LetterGuess";
+import { LetterGuess } from "../types/LetterGuess";
 import { useGame } from "../context/gameContext";
 
 interface IKeyboardKeyProps {

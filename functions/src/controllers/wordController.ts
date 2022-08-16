@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 
 import { ALL_ENGLISH_FIVE_LETTERED_WORDS } from "../utils/words";
 import { Word } from "../types/Word";
+
 const GCLOUD_API_KEY = functions.config().gcloud.api_key;
 const moment = require("moment");
 
@@ -85,7 +86,7 @@ const pickNewWordOfTheDay = (previousWordsOfTheDay: Word[]): string => {
 
 const get = (req: Request, res: Response) => {
 	// By default, fetch the word of the day unless the user requests a random word.
-	const random = !!req.query.random;
+	const random = Boolean(req.query.random);
 
 	const wordPromise = random ? getRandomWord() : getWordOfTheDay();
 	return wordPromise

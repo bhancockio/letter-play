@@ -1,13 +1,14 @@
 import {
 	ALL_ENGLISH_FIVE_LETTERED_WORDS,
+	INITIAL_GAME_STATE,
 	MAXIMUM_GUESSES,
 	MAXIMUM_LETTERS_IN_WORD
 } from "../utils/constants";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
 import { fetchRandomWord, fetchWordForToday } from "../utils/wordUtil";
 
-import LetterGuess from "../interfaces/LetterGuess";
-import Message from "../interfaces/Message";
+import { LetterGuess } from "../types/LetterGuess";
+import { Message } from "../types/Message";
 import { Word } from "@backend/Word";
 import moment from "moment";
 import { postStat } from "../utils/statUtil";
@@ -30,35 +31,15 @@ export interface IGameState {
 	loading: boolean;
 }
 
-export type GameContextType = {
+type GameContextType = {
 	state: IGameState;
 	setCurrentLetterIndex: (index: number) => void;
 	handleKeyDown: (key: KeyboardEvent | string) => void;
-	setGameContext: (gameState: IGameState) => void;
 };
 
 export const GameContext = createContext<GameContextType>({} as GameContextType); // TODO: Currently doing this to avoid null issues
 
-const INITIAL_GAME_STATE: IGameState = {
-	targetWord: "",
-	puzzleNumber: -1,
-	wordGuesses: Array(MAXIMUM_GUESSES).fill(""),
-	currentGuess: Array(MAXIMUM_LETTERS_IN_WORD).fill(""),
-	currentGuessCount: 0,
-	gameOver: false,
-	currentLetterIndex: 0,
-	targetWordGuessed: false,
-	message: { show: false },
-	submissionStatus: "normal",
-	lettersGuessed: new Map<string, LetterGuess>(),
-	loading: false
-};
-
-interface Props {
-	children?: ReactNode;
-}
-
-export default function GameContextComponent(props: Props) {
+export default function GameContextComponent({ children }: { children?: ReactNode }) {
 	const [gameState, setGameState] = useState<IGameState>(INITIAL_GAME_STATE);
 	const router = useRouter();
 	const { user } = useUser();
@@ -71,11 +52,11 @@ export default function GameContextComponent(props: Props) {
 			...prevState,
 			loading: true
 		}));
+
 		const fetchWordPromise: Promise<Word> =
 			asPath === "/?random=true" ? fetchRandomWord() : fetchWordForToday();
 		fetchWordPromise
 			.then((fetchedword) => {
-				console.log("fetchedword", fetchedword);
 				setGameState((previousState: IGameState) => ({
 					...previousState,
 					targetWord: fetchedword.word,
@@ -94,10 +75,6 @@ export default function GameContextComponent(props: Props) {
 			});
 	}, [router.query]);
 
-	const setGameContext = (newGameState: IGameState) => {
-		setGameState({ ...gameState, ...newGameState });
-	};
-
 	const setCurrentLetterIndex = (index: number) => {
 		setGameState({
 			...gameState,
@@ -109,18 +86,8 @@ export default function GameContextComponent(props: Props) {
 		// Ignore keys if user has already won
 		if (gameState.targetWordGuessed) return;
 
-		// Handle multiple types of key presss sources
-		let newKey: string = "";
-		if (event instanceof KeyboardEvent) {
-			// Make sure that the spacebar doesn't scroll down the page.
-			(event as KeyboardEvent).key === " " && (event as KeyboardEvent).preventDefault();
-			newKey = (event as KeyboardEvent).key as string;
-		} else {
-			newKey = event as string;
-		}
+		const formattedKey: string = getNewFormattedKey(event);
 
-		// Convert keyboard inputs to lowercase for simplicity and consistency
-		const formattedKey = newKey?.toLowerCase() || "";
 		// handle submission
 		const { validSubmission, message } = isValidGuessSubmission();
 
@@ -222,8 +189,17 @@ export default function GameContextComponent(props: Props) {
 		}
 	};
 
-	// TODO: This wasn't linked to the state at before doing ghetto fix with keyboard
-	// TODO: Make sure word is actually an english word.
+	// Handle multiple types of key presss sources
+	// Convert key to lowercase for consistent checking
+	const getNewFormattedKey = (event: KeyboardEvent | string): string => {
+		if (event instanceof KeyboardEvent) {
+			// Make sure that the spacebar doesn't scroll down the page.
+			(event as KeyboardEvent).key === " " && (event as KeyboardEvent).preventDefault();
+			return (event as KeyboardEvent).key?.toLowerCase();
+		}
+		return event?.toLowerCase();
+	};
+
 	const isValidGuessSubmission = (): { validSubmission: boolean; message: Message } => {
 		// Make sure the user's guess doesn't contain empty characters/spaces
 		if (gameState.currentGuess.includes(" ") || gameState.currentGuess.includes("")) {
@@ -234,7 +210,6 @@ export default function GameContextComponent(props: Props) {
 		}
 
 		// Make sure the user guesses and english word
-		// TODO: Can I memo this? This is a big check.
 		const userGuess = gameState.currentGuess.join("").toLowerCase();
 		if (!ALL_ENGLISH_FIVE_LETTERED_WORDS.includes(userGuess)) {
 			return {
@@ -290,10 +265,8 @@ export default function GameContextComponent(props: Props) {
 	};
 
 	return (
-		<GameContext.Provider
-			value={{ state: gameState, setCurrentLetterIndex, handleKeyDown, setGameContext }}
-		>
-			{props.children}
+		<GameContext.Provider value={{ state: gameState, setCurrentLetterIndex, handleKeyDown }}>
+			{children}
 		</GameContext.Provider>
 	);
 }

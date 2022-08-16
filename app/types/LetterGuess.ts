@@ -1,4 +1,4 @@
-export default interface LetterGuess {
+export type LetterGuess = {
 	inCorrectSpot: boolean;
 	inWord: boolean;
-}
+};
