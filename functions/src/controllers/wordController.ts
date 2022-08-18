@@ -4,6 +4,7 @@ import * as functions from "firebase-functions";
 import { Request, Response } from "express";
 
 import { ALL_ENGLISH_FIVE_LETTERED_WORDS } from "../utils/words";
+import { Stat } from "src/types/Stat";
 import { Word } from "../types/Word";
 
 const GCLOUD_API_KEY = functions.config().gcloud.api_key;
@@ -86,9 +87,9 @@ const pickNewWordOfTheDay = (previousWordsOfTheDay: Word[]): string => {
 
 const get = (req: Request, res: Response) => {
 	// By default, fetch the word of the day unless the user requests a random word.
-	const random = Boolean(req.query.random);
+	const query = req.query;
 
-	const wordPromise = random ? getRandomWord() : getWordOfTheDay();
+	const wordPromise = getWordBasedOnQuery(query);
 	return wordPromise
 		.then((word) => {
 			return res.status(200).json({ message: "Successfully fetched word", data: word });
@@ -128,6 +129,23 @@ const getRandomWord = async (): Promise<Word> => {
 		});
 };
 
+const getWordBasedOnQuery = (query: any): Promise<Word> => {
+	functions.logger.log("query", query);
+	functions.logger.log("queryRandom", query?.random);
+	functions.logger.log("queryFromState", query?.statId);
+
+	if (!query) {
+		return getWordOfTheDay();
+	}
+	if (query?.random) {
+		return getRandomWord();
+	}
+	if (query?.statId) {
+		return getWordFromState(query?.statId);
+	}
+	return getWordOfTheDay();
+};
+
 const getWordOfTheDay = async (): Promise<Word> => {
 	return admin
 		.firestore()
@@ -141,6 +159,39 @@ const getWordOfTheDay = async (): Promise<Word> => {
 				functions.logger.error("Something went wrong fetching the word of the day");
 			}
 			return snapshot.docs[0].data() as Word;
+		})
+		.catch((error) => {
+			functions.logger.error("Error getting word of the day");
+			functions.logger.error(error);
+			return Promise.reject(new Error("Error getting word of the day"));
+		});
+};
+
+const getWordFromState = async (statId: string): Promise<Word> => {
+	// Fetch the stat
+	return admin
+		.firestore()
+		.doc(`stats/${statId}`)
+		.get()
+		.then((snapshot) => {
+			if (!snapshot.exists) {
+				functions.logger.error("Stat not found");
+				return Promise.reject(new Error("Stat not found"));
+			}
+			return snapshot.data() as Stat;
+		})
+		.then((stat) => {
+			return admin
+				.firestore()
+				.doc(`words/${stat.word}`)
+				.get()
+				.then((snapshot) => {
+					if (!snapshot.exists) {
+						functions.logger.error("Word not found from stat");
+						return Promise.reject(new Error("Word not found from stat"));
+					}
+					return snapshot.data() as Word;
+				});
 		})
 		.catch((error) => {
 			functions.logger.error("Error getting word of the day");

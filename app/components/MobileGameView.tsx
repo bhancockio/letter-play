@@ -1,3 +1,4 @@
+import ChallengeAFriends from "./ChallengeAFriends";
 import GameInformation from "./GameInformation";
 import Keyboard from "./Keyboard";
 import LettersGrid from "./LettersGrid";
@@ -28,6 +29,7 @@ function MobileGameView() {
 				<div className="my-4">
 					<GameInformation />
 				</div>
+				<ChallengeAFriends />
 			</div>
 		</>
 	);

@@ -3,7 +3,7 @@ import React from "react";
 
 function Footer() {
 	return (
-		<div className="w-100 mt-8 border-solid border-t-2 mx-8 text-center">
+		<div className="w-100 m-8 border-solid border-t-2 text-center">
 			<p className="mt-4">
 				Built with{" "}
 				<span className="text-red-600">

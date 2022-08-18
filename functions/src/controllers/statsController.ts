@@ -1,7 +1,8 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
-import { Response } from "express";
+import { Request, Response } from "express";
+
 import { ZodError } from "zod";
 import { generateFirestoreUUID } from "../utils/database";
 import { statSchema } from "../schema/stat.schema";
@@ -9,16 +10,11 @@ import { statSchema } from "../schema/stat.schema";
 const post = async (req: Request, res: Response) => {
 	const uid = generateFirestoreUUID();
 	try {
-		const stats = statSchema.parse(req.body);
-		// If an authenticated user submitted data, add their uid
-
+		const stats = { id: uid, ...statSchema.parse(req.body) };
 		return admin
 			.firestore()
 			.doc(`stats/${uid}`)
-			.set({
-				id: uid,
-				...stats
-			})
+			.set(stats)
 			.then(() => {
 				return res
 					.status(200)
@@ -42,6 +38,32 @@ const post = async (req: Request, res: Response) => {
 	}
 };
 
+const get = (req: Request, res: Response) => {
+	const id = req.query.id;
+
+	if (!id) {
+		return res.status(400).json({ message: "Missing id" });
+	}
+	return admin
+		.firestore()
+		.doc(`stats/${id}`)
+		.get()
+		.then((snapshot) => {
+			if (!snapshot.exists) {
+				return res.status(404).json({ message: "Stats not found" });
+			}
+			return res
+				.status(200)
+				.json({ message: "Successfully fetched stats", data: snapshot.data() });
+		})
+		.catch((error) => {
+			functions.logger.error("Error fetching stats");
+			functions.logger.error(error);
+			return res.status(500).json({ message: "Something went wrong fetching the stats" });
+		});
+};
+
 module.exports = {
-	post
+	post,
+	get
 };

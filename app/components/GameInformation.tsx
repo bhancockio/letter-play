@@ -1,11 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
+
+import { Stat } from "@backend/Stat";
+import { getStats } from "utils/statUtil";
 import moment from "moment";
 import { useGame } from "../context/gameContext";
+import { useRouter } from "next/router";
 
 function GameInformation() {
 	const game = useGame();
-
 	const { targetWord, targetWordGuessed, gameOver, puzzleNumber, date } = game.state;
+	const [stats, setStats] = React.useState<Stat | null>();
+	const router = useRouter();
+
+	useEffect(() => {
+		const safePath = router.asPath.replace(/\//g, "").replace("?", "");
+		const [query, id] = safePath.split("=");
+		if (query === "statId") {
+			getStats(id)
+				.then((resp) => {
+					if (resp.data.data?.userName) {
+						setStats(resp.data.data);
+					} else {
+						setStats(null);
+					}
+				})
+				.catch(() => {
+					setStats(null);
+				});
+		} else {
+			setStats(null);
+		}
+	}, [router.asPath]);
 
 	const endOfGamePrompt = () => {
 		const bgColor = targetWordGuessed ? "bg-green-200" : "bg-red-200";
@@ -56,30 +81,38 @@ function GameInformation() {
 					</div>
 				)}
 			</div>
+			{stats && (
+				<div className="flex flex-col p-4 mt-4 rounded-md border-2 border-gray-300">
+					<div className="mb-2">
+						<h2 className="text-lg font-semibold text-slate-800">
+							Challenger: <span>{stats.userName}</span>
+						</h2>
+						<p className="text-slate-700">
+							{stats.userName} was able to guess this word in{" "}
+							<span className="font-bold">{stats.numberOfGuesses} </span>
+							tries. Good luck!
+						</p>
+					</div>
+				</div>
+			)}
 
 			{/* Winner  (prompt to create a new acount) */}
 			{gameOver && (
 				<>
 					{endOfGamePrompt()}
-					<div className="flex flex-row justify-abround">
+					<div className="flex flex-row justify-between">
 						<button
 							type="button"
-							className="bg-green-500 py-2 px-3 tracking-tight mr-1 rounded-md text-white font-semibold"
+							className="bg-green-500 py-2 px-4 tracking-tight mr-1 rounded-md text-white font-semibold"
 						>
 							<a href="?random=true">New Game</a>
 						</button>
-						<button
-							type="button"
-							className="bg-purple-500 py-2 px-3 tracking-tight mr-1 rounded-md text-white font-semibold"
-						>
-							share
-						</button>
-						<button
-							type="button"
-							className="bg-purple-500 py-2 px-3 tracking-tight rounded-md text-white font-semibold"
+						<label
+							htmlFor="challenge-modal"
+							className="bg-purple-500 py-2 px-4 tracking-tight rounded-md text-white font-semibold"
 						>
 							Challenge A Friend
-						</button>
+						</label>
 					</div>
 				</>
 			)}

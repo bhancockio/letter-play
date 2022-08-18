@@ -1,3 +1,4 @@
+import ChallengeAFriends from "./ChallengeAFriends";
 import GameInformation from "./GameInformation";
 import Keyboard from "./Keyboard";
 import LettersGrid from "./LettersGrid";
@@ -35,6 +36,7 @@ function DesktopGameView() {
 				<div className="flex flex-1">{/* How to video */}</div>
 			</div>
 			<Keyboard />
+			<ChallengeAFriends />
 		</>
 	);
 }

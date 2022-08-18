@@ -5,11 +5,11 @@ import {
 	MAXIMUM_LETTERS_IN_WORD
 } from "../utils/constants";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
-import { fetchRandomWord, fetchWordForToday } from "../utils/wordUtil";
 
 import { LetterGuess } from "../types/LetterGuess";
 import { Message } from "../types/Message";
-import { Word } from "@backend/Word";
+import { Stat } from "@backend/Stat";
+import { fetchWordBasedOnPath } from "../utils/wordUtil";
 import moment from "moment";
 import { postStat } from "../utils/statUtil";
 import { useRouter } from "next/router";
@@ -29,6 +29,7 @@ export interface IGameState {
 	lettersGuessed: Map<string, LetterGuess>;
 	date?: string;
 	loading: boolean;
+	stat?: Stat;
 }
 
 type GameContextType = {
@@ -53,8 +54,7 @@ export default function GameContextComponent({ children }: { children?: ReactNod
 			loading: true
 		}));
 
-		const fetchWordPromise: Promise<Word> =
-			asPath === "/?random=true" ? fetchRandomWord() : fetchWordForToday();
+		const fetchWordPromise = fetchWordBasedOnPath(asPath);
 		fetchWordPromise
 			.then((fetchedword) => {
 				setGameState((previousState: IGameState) => ({
@@ -120,10 +120,17 @@ export default function GameContextComponent({ children }: { children?: ReactNod
 				if (gameOver) {
 					await postStat({
 						userId: user?.uid,
+						userName: user?.displayName,
 						createdAt: moment().toISOString(),
 						word: gameState.targetWord,
 						guessedCorrectly: targetWordGuessed,
 						numberOfGuesses: gameState.currentGuessCount + 1
+					}).then((resp) => {
+						console.log("post stat response", resp.data.data);
+						setGameState((prevState) => ({
+							...prevState,
+							stat: resp.data.data
+						}));
 					});
 				}
 			} else {

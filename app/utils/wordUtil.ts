@@ -1,19 +1,14 @@
 import { Word } from "@backend/Word";
 import axios from "axios";
 
-export const fetchRandomWord = (): Promise<Word> => {
-	const queryString = "?random=true";
-	return fetchWord(queryString);
-};
-
-// Date is formatted as YYYY-MM-DD
-export const fetchWordForToday = (): Promise<Word> => {
-	return fetchWord();
-};
-
-const fetchWord = (queryString: string = ""): Promise<Word> => {
+export const fetchWordBasedOnPath = (queryString: string = ""): Promise<Word> => {
+	const formattedQueryString = queryString.replace("/", "");
 	return axios
-		.get(`${process.env.NEXT_PUBLIC_FIREBASE_API_URL}/word${queryString ? queryString : ""}`)
+		.get(
+			`${process.env.NEXT_PUBLIC_FIREBASE_API_URL}/word${
+				formattedQueryString ? formattedQueryString : ""
+			}`
+		)
 		.then((resp) => {
 			return resp.data?.data as Word;
 		})
