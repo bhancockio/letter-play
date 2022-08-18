@@ -24,7 +24,7 @@ function ChallengeAFriends() {
 							I solved a LettersPlay in {state.stat?.numberOfGuesses} out of 6 turns.
 						</p>
 						<p className="py-3">See how you do on the same word I played</p>
-						<p className="py-3">
+						<p className="py-3 bg-green-100 rounded-lg">
 							{process.env.NEXT_PUBLIC_BASE_URL}/?statId={state.stat?.id}
 						</p>
 					</div>
