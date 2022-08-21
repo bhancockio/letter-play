@@ -1,5 +1,5 @@
 import { KEYBOARD_KEYS, KeyboardKeyValuePair } from "../utils/constants";
-import React, { useEffect } from "react";
+import React from "react";
 
 import { LetterGuess } from "../types/LetterGuess";
 import { useGame } from "../context/gameContext";
