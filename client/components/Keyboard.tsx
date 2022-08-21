@@ -53,20 +53,6 @@ function Keyboard() {
 	const { handleKeyDown } = game;
 	const { lettersGuessed, gameOver } = game.state;
 
-	// Reassigning event listeners everytime gamestate chnages.
-	// TODO: See if this can be moved somehwere else
-	useEffect(() => {
-		const onKeyDown = (e: KeyboardEvent) => {
-			handleKeyDown(e);
-		};
-		// Handle key presses
-		document.addEventListener("keydown", onKeyDown);
-
-		return () => {
-			document.removeEventListener("keydown", onKeyDown);
-		};
-	}, [game.state]);
-
 	if (gameOver) {
 		return null;
 	}

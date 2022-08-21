@@ -22,7 +22,8 @@
 		"next": "latest",
 		"react": "latest",
 		"react-dom": "latest",
-		"react-spinners": "^0.13.4"
+		"react-spinners": "^0.13.4",
+		"usehooks-ts": "^2.6.0"
 	},
 	"devDependencies": {
 		"@next/eslint-plugin-next": "^12.2.3",
