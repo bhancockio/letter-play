@@ -6,9 +6,12 @@ import Loading from "./Loading";
 import Notifications from "./Notifications";
 import React from "react";
 import { useGame } from "../context/gameContext";
+import { useEventListener } from "usehooks-ts";
 
 function DesktopGameView() {
 	const game = useGame();
+
+	useEventListener('keydown', game.handleKeyDown)
 
 	if (!game || game.state.loading) {
 		return <Loading />;
