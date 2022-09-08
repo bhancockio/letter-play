@@ -3,7 +3,6 @@
 	"name": "letters-play",
 	"version": "1.0.0",
 	"scripts": {
-		"build": "cd client && yarn build",
-		"build:lib": "cd shared && yarn build"
+		"build": "cd client && yarn build"
 	}
 }
